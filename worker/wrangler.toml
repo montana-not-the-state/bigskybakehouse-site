@@ -1,0 +1,8 @@
+name = "bakehouse-diagnose"
+main = "src/index.js"
+compatibility_date = "2026-09-06"
+compatibility_flags = ["nodejs_compat"]
+
+# The API key is NOT stored here. Set it once, from your terminal:
+#   npx wrangler secret put ANTHROPIC_API_KEY
+# It is stored encrypted by Cloudflare and never appears in this repo.
