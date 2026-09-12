@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Bakehouse Shelf</title>
+<meta name="description" content="What's actually on my shelf — the pans, scale, flour and tools I use to bake sourdough at Big Sky Bakehouse in Annapolis, MD.">
+<meta name="theme-color" content="#1B2A41">
+<meta property="og:title" content="The Bakehouse Shelf">
+<meta property="og:description" content="What's actually on my shelf — the pan, the flour, the scale I actually use.">
+<meta property="og:type" content="website">
+<link rel="icon" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bitter:wght@600;700;800&family=Karla:wght@400;500;700&display=swap">
+
+<style>
+:root{
+  --bone:#F5F0E6;
+  --deep:#1B2A41;
+  --crust:#BE6B39;
+  --crust-tint:#D98A55;
+  --jam:#7E3B52;
+  --ink:#14181F;
+  --stone:#8B8578;
+
+  --bg:var(--bone);
+  --band:var(--deep);
+  --band-text:#F5F0E6;
+  --band-muted:#B9C1CD;
+  --band-accent:var(--crust-tint);
+  --text:var(--ink);
+  --muted:#7C776B;
+  --heading:var(--deep);
+  --accent:var(--crust);
+  --rule:#E0D8C8;
+  --feature-bg:var(--jam);
+  --feature-text:#F7EFE9;
+  --feature-muted:#DCC3CE;
+  --feature-accent:#F0C9A6;
+
+  --step--1:0.8125rem;
+  --step-0:1.0625rem;
+  --step-1:1.25rem;
+  --step-2:1.5rem;
+  --step-3:2rem;
+  --step-4:2.75rem;
+}
+
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#101825;
+    --band:#1B2A41;
+    --band-text:#F5F0E6;
+    --band-muted:#A8B2C0;
+    --band-accent:var(--crust-tint);
+    --text:#EDE7DA;
+    --muted:#9A9384;
+    --heading:#F0EADC;
+    --accent:var(--crust-tint);
+    --rule:#28354A;
+    --feature-bg:#7E3B52;
+    --feature-text:#F7EFE9;
+    --feature-muted:#DCC3CE;
+    --feature-accent:#F0C9A6;
+  }
+}
+
+:root[data-theme="dark"]{
+  --bg:#101825;
+  --band:#1B2A41;
+  --band-text:#F5F0E6;
+  --band-muted:#A8B2C0;
+  --band-accent:var(--crust-tint);
+  --text:#EDE7DA;
+  --muted:#9A9384;
+  --heading:#F0EADC;
+  --accent:var(--crust-tint);
+  --rule:#28354A;
+  --feature-bg:#7E3B52;
+  --feature-text:#F7EFE9;
+  --feature-muted:#DCC3CE;
+  --feature-accent:#F0C9A6;
+}
+
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Karla','Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-size:var(--step-0);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+
+.band{
+  background:var(--band);
+  color:var(--band-text);
+  padding-block:3.25rem 2.75rem;
+  padding-left:max(20px,env(safe-area-inset-left));
+  padding-right:max(20px,env(safe-area-inset-right));
+}
+.band-inner{max-width:640px;margin-inline:auto;}
+
+.back{
+  display:inline-block;
+  font-size:var(--step--1);
+  font-weight:700;
+  letter-spacing:0.02em;
+  color:var(--band-muted);
+  text-decoration:none;
+  margin:0 0 1.25rem;
+  border-bottom:1px solid transparent;
+}
+.back:hover,.back:focus-visible{color:var(--band-text);border-bottom-color:currentColor;}
+
+.mark{
+  font-family:'Karla',sans-serif;
+  font-size:var(--step--1);
+  font-weight:700;
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+  color:var(--band-accent);
+  margin:0 0 0.85rem;
+}
+
+h1{
+  font-family:'Bitter',Georgia,'Times New Roman',serif;
+  font-weight:800;
+  font-size:var(--step-4);
+  line-height:1.08;
+  letter-spacing:-0.015em;
+  text-wrap:balance;
+  margin:0 0 1rem;
+}
+
+.standfirst{
+  font-size:var(--step-1);
+  line-height:1.5;
+  color:var(--band-muted);
+  margin:0 0 1.6rem;
+  max-width:34ch;
+}
+
+.disclosure{
+  font-size:var(--step--1);
+  line-height:1.5;
+  color:var(--band-muted);
+  margin:0;
+  padding-top:1.1rem;
+  border-top:1px solid rgba(217,138,85,0.35);
+  max-width:52ch;
+}
+
+main{
+  max-width:640px;
+  margin-inline:auto;
+  padding-block:0 3rem;
+  padding-left:max(20px,env(safe-area-inset-left));
+  padding-right:max(20px,env(safe-area-inset-right));
+}
+
+section{padding-block:2.75rem 0;}
+
+.section-head{
+  display:flex;
+  flex-direction:column;
+  gap:0.4rem;
+  padding-bottom:1.5rem;
+}
+
+h2{
+  font-family:'Bitter',Georgia,serif;
+  font-weight:700;
+  font-size:var(--step-2);
+  line-height:1.2;
+  color:var(--heading);
+  margin:0;
+  text-wrap:balance;
+}
+
+.section-note{
+  font-size:var(--step--1);
+  color:var(--muted);
+  margin:0;
+  max-width:56ch;
+}
+
+.items{
+  display:flex;
+  flex-direction:column;
+  gap:1.6rem;
+  margin:0;
+  padding:0;
+  list-style:none;
+}
+
+.item{
+  display:flex;
+  flex-direction:column;
+  gap:0.4rem;
+  padding-top:1.5rem;
+  border-top:1px solid var(--rule);
+}
+.items > .item:first-child{padding-top:0;border-top:none;}
+
+.role{
+  font-size:0.6875rem;
+  font-weight:700;
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+  color:var(--accent);
+}
+
+.item-name{
+  font-family:'Karla',sans-serif;
+  font-weight:700;
+  font-size:var(--step-1);
+  line-height:1.3;
+  color:var(--heading);
+  margin:0;
+  text-wrap:balance;
+}
+
+.item-note{
+  margin:0;
+  color:var(--text);
+  max-width:60ch;
+}
+
+.go{
+  font-weight:700;
+  font-size:var(--step--1);
+  letter-spacing:0.03em;
+  color:var(--accent);
+  text-decoration:none;
+  border-bottom:2px solid transparent;
+  align-self:flex-start;
+  padding-bottom:1px;
+  transition:border-color 140ms ease;
+}
+.go:hover,.go:focus-visible{border-bottom-color:var(--accent);}
+.go:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:2px;}
+
+.feature{
+  background:var(--feature-bg);
+  color:var(--feature-text);
+  margin-block:3rem 0;
+  padding:2.25rem 1.75rem;
+}
+.feature .eyebrow{
+  font-size:0.6875rem;
+  font-weight:700;
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+  color:var(--feature-accent);
+  margin:0 0 0.9rem;
+}
+.feature h2{
+  color:var(--feature-text);
+  font-size:var(--step-3);
+  margin:0 0 0.9rem;
+  line-height:1.15;
+}
+.feature p{
+  margin:0 0 1rem;
+  color:var(--feature-text);
+  max-width:52ch;
+}
+.feature p.aside{color:var(--feature-muted);font-size:var(--step--1);}
+.feature .go{
+  color:var(--feature-accent);
+  margin-top:0.35rem;
+}
+.feature .go:hover,.feature .go:focus-visible{border-bottom-color:var(--feature-accent);}
+.feature .go:focus-visible{outline-color:var(--feature-accent);}
+
+footer{
+  max-width:640px;
+  margin-inline:auto;
+  padding-block:2.5rem 3.5rem;
+  padding-left:max(20px,env(safe-area-inset-left));
+  padding-right:max(20px,env(safe-area-inset-right));
+  border-top:1px solid var(--rule);
+  margin-top:3rem;
+}
+footer p{
+  font-size:var(--step--1);
+  color:var(--muted);
+  margin:0 0 0.75rem;
+  max-width:58ch;
+}
+footer a{color:var(--accent);font-weight:700;text-decoration:none;border-bottom:1px solid transparent;}
+footer a:hover,footer a:focus-visible{border-bottom-color:var(--accent);}
+
+@media (max-width:420px){
+  :root{--step-4:2.15rem;--step-3:1.6rem;--step-2:1.35rem;--step-1:1.125rem;}
+  .feature{padding:1.75rem 1.25rem;}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important;animation:none !important;}
+}
+</style>
+</head>
+<body>
+
+<header class="band">
+  <div class="band-inner">
+    <a class="back" href="/">← Big Sky Bakehouse</a>
+    <p class="mark">Big Sky Bakehouse · Annapolis</p>
+    <h1>What's actually on my shelf.</h1>
+    <p class="standfirst">Every week someone asks what pan, what flour, what scale. This is the answer, and nothing I don't own.</p>
+    <p class="disclosure">As an Amazon Associate I earn from qualifying purchases — if you buy through these links it costs you nothing extra and sends a little back to the bakery. I only list things I use.</p>
+  </div>
+</header>
+
+<main>
+
+  <section aria-labelledby="start">
+    <div class="section-head">
+      <h2 id="start">Start here</h2>
+      <p class="section-note">Five things, five jobs. If you're making your first loaf, this is the whole list — you can stop reading after this section.</p>
+    </div>
+    <ul class="items">
+
+      <li class="item">
+        <span class="role">The scale</span>
+        <p class="item-name">Ooni Dual Platform Digital Scales</p>
+        <p class="item-note">Two platforms, so you can weigh 900g of flour and 8g of salt without swapping devices or re-taring. I weigh everything. Measuring cups are how loaves quietly go wrong.</p>
+        <a class="go" href="https://www.amazon.com/dp/B0821MGHM2?tag=bigskybakehou-20" target="_blank" rel="noopener">View on Amazon →</a>
+      </li>
+
+      <li class="item">
+        <span class="role">The basket</span>
+        <p class="item-name">7&Prime; Round Banneton, set of two</p>
+        <p class="item-note">Two is the right number — one always has dough in it. Round is more forgiving than oval when you're still learning to shape.</p>
+        <a class="go" href="https://www.amazon.com/dp/B0BY62X7D3?tag=bigskybakehou-20" target="_blank" rel="noopener">View on Amazon →</a>
+      </li>
+
+      <li class="item">
+        <span class="role">The blade</span>
+        <p class="item-name">Magnetic Wooden Bread Lame</p>
+        <p class="item-note">Lives on the side of the fridge instead of vanishing into a drawer. A real blade parts the skin cleanly; a paring knife drags and tears it.</p>
+        <a class="go" href="https://www.amazon.com/dp/B0CP1PGCCM?tag=bigskybakehou-20" target="_blank" rel="noopener">View on Amazon →</a>
+      </li>
+
+      <li class="item">
+        <span class="role">The oven</span>
+        <p class="item-name">3-Quart Covered Round Roaster Pan</p>
+        <p class="item-note">This is the part nobody tells you. Every sourdough account on the internet opens with a $400 combo cooker. I bake in this. Lid on to trap the steam, lid off for the last stretch to get colour. It costs about thirty dollars and I have never wanted the expensive one.</p>
+        <a class="go" href="https://www.amazon.com/dp/B08LPP7J1F?tag=bigskybakehou-20" target="_blank" rel="noopener">View on Amazon →</a>
+      </li>
+
+      <li class="item">
+        <span class="role">The flour</span>
+        <p class="item-name">King Arthur Bread Flour</p>
+        <p class="item-note">I buy this by the bag at Sam's Club because I go through it fast. Bread flour, not all-purpose — the protein is the point.</p>
+        <a class="go" href="https://www.samsclub.com/ip/King-Arthur-Bread-Flour-10-lbs/13611962929" target="_blank" rel="noopener">Shop at Sam's Club →</a>
+      </li>
+
+    </ul>
+  </section>
+
+  <aside class="feature">
+    <p class="eyebrow">The one that isn't cheap</p>
+    <h2>I bought the Ooni, not the KitchenAid.</h2>
+    <p>It's a spiral mixer. The hook turns while the bowl turns under it, which works the dough the way hands do instead of dragging it around a stationary bowl — less friction, less heat, and it handles wet dough without climbing the hook and stalling.</p>
+    <p>It's around $800, which is more than everything else on this page put together. I'm not going to pretend that's an impulse buy. But I was making four batches a week by hand and the KitchenAid everyone recommends was going to be the wrong tool twice.</p>
+    <p class="aside">If you're baking two loaves on a Sunday, skip this entirely. The list above is the real list.</p>
+    <a class="go" href="https://www.amazon.com/dp/B0F746CZ3L?tag=bigskybakehou-20" target="_blank" rel="noopener">View on Amazon →</a>
+  </aside>
+
+  <section aria-labelledby="bench">
+    <div class="section-head">
+      <h2 id="bench">The bench</h2>
+      <p class="section-note">Things I pick up without thinking about them.</p>
+    </div>
+    <ul class="items">
+
+      <li class="item">
+        <p class="item-name">Elastic Bowl Covers, 300 pack</p>
+        <p class="item-note">Shower caps for dough. Cheaper than plastic wrap, and they don't weld themselves to a wet bowl rim the way cling film does.</p>
+        <a class="go" href="https://www.amazon.com/dp/B0GVJ6LH3B?tag=bigskybakehou-20" target="_blank" rel="noopener">View on Amazon →</a>
+      </li>
+
+      <li class="item">
+        <p class="item-name">One-Handed Flour Duster</p>
+        <p class="item-note">One-handed matters when the other hand is covered in dough. Dusts evenly instead of dropping a clump on the banneton.</p>
+        <a class="go" href="https://www.amazon.com/dp/B0F6LLM811?tag=bigskybakehou-20" target="_blank" rel="noopener">View on Amazon →</a>
+      </li>
+
+      <li class="item">
+        <p class="item-name">Instant Read Digital Thermometer</p>
+        <p class="item-note">For the crumb, not the crust. 205–210°F in the middle means it's baked through — which is the difference between a dense loaf and an underbaked one, and you cannot tell by tapping.</p>
+        <a class="go" href="https://www.amazon.com/dp/B0F5X4FM3Q?tag=bigskybakehou-20" target="_blank" rel="noopener">View on Amazon →</a>
+      </li>
+
+      <li class="item">
+        <p class="item-name">Kitchen Shears</p>
+        <p class="item-note">Scoring focaccia, cutting parchment to size, opening flour bags without a knife. Not precious, used constantly.</p>
+        <a class="go" href="https://www.amazon.com/dp/B091TRM9WF?tag=bigskybakehou-20" target="_blank" rel="noopener">View on Amazon →</a>
+      </li>
+
+      <li class="item">
+        <p class="item-name">Collapsible Cooling Rack, three tiers</p>
+        <p class="item-note">Folds flat. Counter space is the actual constraint on drop day, and this stacks three racks of loaves into one rack's footprint.</p>
+        <a class="go" href="https://www.amazon.com/dp/B08PZ4TTXJ?tag=bigskybakehou-20" target="_blank" rel="noopener">View on Amazon →</a>
+      </li>
+
+    </ul>
+  </section>
+
+  <section aria-labelledby="pans">
+    <div class="section-head">
+      <h2 id="pans">Loaf pans</h2>
+      <p class="section-note">For the sandwich loaves, which are a different animal from a boule.</p>
+    </div>
+    <ul class="items">
+
+      <li class="item">
+        <p class="item-name">Stainless Loaf Pans, 8.5 &times; 5.5, four pack</p>
+        <p class="item-note">Four, because a sandwich loaf week is a four-loaf week. Stainless means there's no nonstick coating to scratch off into the bread.</p>
+        <a class="go" href="https://www.amazon.com/dp/B0FBW6RPFZ?tag=bigskybakehou-20" target="_blank" rel="noopener">View on Amazon →</a>
+      </li>
+
+      <li class="item">
+        <p class="item-name">USA Pan Cocktail Sandwich Loaf Pan</p>
+        <p class="item-note">The little one. Makes the small square loaves that sell out first every single drop.</p>
+        <a class="go" href="https://www.amazon.com/dp/B09VZVRR8V?tag=bigskybakehou-20" target="_blank" rel="noopener">View on Amazon →</a>
+      </li>
+
+    </ul>
+  </section>
+
+  <section aria-labelledby="market">
+    <div class="section-head">
+      <h2 id="market">Packaging &amp; market day</h2>
+      <p class="section-note">The part nobody warns you about when you start selling bread instead of giving it away.</p>
+    </div>
+    <ul class="items">
+
+      <li class="item">
+        <p class="item-name">Kraft Bread Bags with Tin Tie, 8.6&Prime;</p>
+        <p class="item-note">I went through four kinds before this one. The tin tie actually holds, the paper doesn't sweat the crust soft overnight, and 8.6 inches fits a standard boule without folding it in.</p>
+        <a class="go" href="https://www.amazon.com/dp/B0FJRX2NMY?tag=bigskybakehou-20" target="_blank" rel="noopener">View on Amazon →</a>
+      </li>
+
+      <li class="item">
+        <p class="item-name">8 &times; 8 Aluminum Pans with Lids, 35 pack</p>
+        <p class="item-note">Cinnamon rolls travel in these. Lid on, name written on the lid, straight into someone's car.</p>
+        <a class="go" href="https://www.amazon.com/dp/B0B9H7S897?tag=bigskybakehou-20" target="_blank" rel="noopener">View on Amazon →</a>
+      </li>
+
+      <li class="item">
+        <p class="item-name">Aluminum Cups with Lids, 5 oz</p>
+        <p class="item-note">Single portions — a couple of rolls, a scoop of something to go alongside. Stack flat in a crate.</p>
+        <a class="go" href="https://www.amazon.com/dp/B0BRSM9FBP?tag=bigskybakehou-20" target="_blank" rel="noopener">View on Amazon →</a>
+      </li>
+
+      <li class="item">
+        <p class="item-name">Fitted Tablecloth, 72 &times; 30</p>
+        <p class="item-note">Fitted, so it doesn't billow or need clipping. Turns a folding table with bread on it into something that looks like a stall.</p>
+        <a class="go" href="https://www.amazon.com/dp/B07F89RWHX?tag=bigskybakehou-20" target="_blank" rel="noopener">View on Amazon →</a>
+      </li>
+
+    </ul>
+  </section>
+
+</main>
+
+<footer>
+  <p>As an Amazon Associate I earn from qualifying purchases.</p>
+  <p>Bread is at <a href="https://hotplate.com/bigskybakehouse" target="_blank" rel="noopener">hotplate.com/bigskybakehouse</a> — weekly drops, pre-order only. The rest of it is on <a href="https://www.instagram.com/bigskybakehouse" target="_blank" rel="noopener">Instagram</a>.</p>
+</footer>
+</body>
+</html>

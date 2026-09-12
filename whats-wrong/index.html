@@ -1,0 +1,684 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What Went Wrong — Big Sky Bakehouse</title>
+<meta name="description" content="A sourdough diagnostic from Big Sky Bakehouse in Annapolis. Tap what your loaf did and get the likely causes, ranked, with what to change next bake.">
+<link rel="icon" href="favicon.png" type="image/png">
+<meta name="theme-color" content="#F5F0E6">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="What went wrong?">
+<meta property="og:description" content="Tap what your loaf did. I'll tell you the likely reasons, ranked, and what to change next bake.">
+<meta property="og:site_name" content="Big Sky Bakehouse">
+<meta name="twitter:card" content="summary">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,400;0,600;0,700;1,400&family=Karla:ital,wght@0,400;0,500;0,700;1,400&display=swap">
+
+<style>
+  :root {
+    --ground:   #F5F0E6;
+    --sky:      #1B2A41;
+    --accent:   #BE6B39;
+    --jam:      #7E3B52;
+
+    --surface:  #FBF8F1;
+    --raised:   #FFFFFF;
+    --rule:     #E0D6C2;
+    --rule-soft:#EBE3D4;
+    --ink:      #1B2A41;
+    --ink-soft: #4A5568;
+    --muted:    #7A7264;
+    --shadow:   rgba(27, 42, 65, .08);
+    --tile-hover: #F0E8D8;
+    --focus:    #BE6B39;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:   #141E2C;
+      --sky:      #F1EADC;
+      --accent:   #D98650;
+      --jam:      #C08099;
+      --surface:  #1B2738;
+      --raised:   #223046;
+      --rule:     #33435C;
+      --rule-soft:#2A3A50;
+      --ink:      #F1EADC;
+      --ink-soft: #BFC8D6;
+      --muted:    #8C99AB;
+      --shadow:   rgba(0, 0, 0, .32);
+      --tile-hover: #2A3A50;
+      --focus:    #D98650;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground:   #141E2C;
+    --sky:      #F1EADC;
+    --accent:   #D98650;
+    --jam:      #C08099;
+    --surface:  #1B2738;
+    --raised:   #223046;
+    --rule:     #33435C;
+    --rule-soft:#2A3A50;
+    --ink:      #F1EADC;
+    --ink-soft: #BFC8D6;
+    --muted:    #8C99AB;
+    --shadow:   rgba(0, 0, 0, .32);
+    --tile-hover: #2A3A50;
+    --focus:    #D98650;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: Karla, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  img { max-width: 100%; }
+
+  .wrap { max-width: 680px; margin: 0 auto; padding: 0 20px 72px; }
+
+  .masthead {
+    padding: 40px 0 28px;
+    border-bottom: 2px solid var(--sky);
+    margin-bottom: 28px;
+  }
+
+  .eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--accent); margin: 0 0 12px;
+  }
+
+  h1 {
+    font-family: Bitter, Georgia, serif; font-weight: 700;
+    font-size: clamp(34px, 9vw, 50px); line-height: 1.02;
+    letter-spacing: -.02em; margin: 0 0 14px; text-wrap: balance;
+  }
+
+  .standfirst {
+    font-size: 17px; line-height: 1.5; color: var(--ink-soft);
+    margin: 0; max-width: 46ch;
+  }
+
+  .sec-label { display: flex; align-items: baseline; gap: 12px; margin: 0 0 16px; }
+  .sec-label h2 {
+    font-family: Bitter, Georgia, serif; font-size: 19px;
+    font-weight: 600; margin: 0; letter-spacing: -.01em;
+  }
+  .sec-label .hint { font-size: 13px; color: var(--muted); }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+    gap: 10px; margin: 0 0 40px;
+  }
+
+  .tile {
+    appearance: none; text-align: left; font: inherit; color: var(--ink);
+    background: var(--surface); border: 1px solid var(--rule);
+    border-radius: 3px; padding: 13px 14px 14px; cursor: pointer;
+    display: flex; flex-direction: column; gap: 4px;
+    transition: background .13s ease, border-color .13s ease;
+  }
+  .tile:hover { background: var(--tile-hover); border-color: var(--accent); }
+  .tile:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .tile[aria-pressed="true"] { background: var(--sky); border-color: var(--sky); color: var(--ground); }
+  .tile[aria-pressed="true"] .tile-sub { color: var(--ground); opacity: .72; }
+
+  .tile-name { font-family: Bitter, Georgia, serif; font-weight: 600; font-size: 15px; line-height: 1.2; }
+  .tile-sub { font-size: 12.5px; color: var(--muted); line-height: 1.35; }
+
+  .diagnosis {
+    background: var(--raised); border: 1px solid var(--rule);
+    border-top: 3px solid var(--accent); border-radius: 3px;
+    padding: 24px 22px 22px; margin: 0 0 40px;
+    box-shadow: 0 1px 3px var(--shadow);
+  }
+  .diagnosis h3 {
+    font-family: Bitter, Georgia, serif; font-size: 23px; font-weight: 700;
+    margin: 0 0 6px; letter-spacing: -.015em; text-wrap: balance;
+  }
+  .diag-lede {
+    font-size: 15.5px; color: var(--ink-soft); margin: 0 0 22px;
+    font-style: italic; font-family: Bitter, Georgia, serif;
+  }
+
+  .causes { display: flex; flex-direction: column; gap: 15px; margin: 0 0 24px; }
+  .cause { display: flex; flex-direction: column; gap: 5px; }
+  .cause-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .cause-name { font-weight: 700; font-size: 15px; }
+
+  .odds { font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; }
+  .odds.high { color: var(--accent); }
+  .odds.mid  { color: var(--jam); }
+  .odds.low  { color: var(--muted); }
+
+  .bar { height: 3px; background: var(--rule-soft); border-radius: 2px; overflow: hidden; }
+  .bar span { display: block; height: 100%; }
+  .bar span.high { width: 100%; background: var(--accent); }
+  .bar span.mid  { width: 58%;  background: var(--jam); }
+  .bar span.low  { width: 26%;  background: var(--muted); }
+
+  .cause-why { font-size: 14.5px; color: var(--ink-soft); margin: 1px 0 0; }
+
+  .fix {
+    background: var(--surface); border-left: 3px solid var(--sky);
+    padding: 15px 16px; border-radius: 0 3px 3px 0;
+  }
+  .fix-label {
+    font-size: 10.5px; font-weight: 700; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--muted); margin: 0 0 6px;
+  }
+  .fix p { margin: 0; font-size: 15px; }
+
+  .empty {
+    border: 1px dashed var(--rule); border-radius: 3px;
+    padding: 28px 22px; text-align: center; color: var(--muted);
+    font-size: 15px; margin: 0 0 40px;
+  }
+
+  .ask, .capture { border-top: 1px solid var(--rule); padding-top: 28px; margin-bottom: 40px; }
+
+  .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+
+  label {
+    font-size: 12px; font-weight: 700; letter-spacing: .06em;
+    text-transform: uppercase; color: var(--muted);
+  }
+
+  textarea, select, input[type="email"] {
+    font: inherit; font-size: 15px; color: var(--ink);
+    background: var(--surface); border: 1px solid var(--rule);
+    border-radius: 3px; padding: 10px 11px; width: 100%;
+  }
+  textarea { min-height: 92px; resize: vertical; line-height: 1.45; }
+  textarea:focus-visible, select:focus-visible, input:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+
+  .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+
+  .go {
+    appearance: none; font: inherit; font-weight: 700; font-size: 15px;
+    background: var(--sky); color: var(--ground); border: none;
+    border-radius: 3px; padding: 12px 22px; cursor: pointer; margin-top: 4px;
+  }
+  .go:hover { background: var(--accent); }
+  .go:disabled { opacity: .5; cursor: default; }
+  .go:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+  .answer {
+    margin-top: 20px; background: var(--raised); border: 1px solid var(--rule);
+    border-top: 3px solid var(--jam); border-radius: 3px;
+    padding: 20px 20px 18px; font-size: 15.5px;
+    white-space: pre-wrap; line-height: 1.55;
+  }
+  .answer .thinking { color: var(--muted); font-style: italic; }
+  .answer .err { color: var(--jam); }
+
+  .capture p.pitch { margin: 0 0 14px; font-size: 15.5px; color: var(--ink-soft); max-width: 52ch; }
+  .capture form { display: flex; gap: 8px; flex-wrap: wrap; align-items: flex-end; }
+  .capture .field { flex: 1 1 220px; margin-bottom: 0; }
+  .capture .go { margin-top: 0; }
+  .capture .note { font-size: 13px; color: var(--muted); margin: 10px 0 0; }
+
+  .outro { border-top: 2px solid var(--sky); padding-top: 24px; display: flex; flex-direction: column; gap: 14px; }
+  .links { display: flex; flex-direction: column; gap: 9px; }
+  .links a {
+    color: var(--ink); text-decoration: none;
+    border-bottom: 1px solid var(--accent); padding-bottom: 1px;
+    font-weight: 500; align-self: flex-start;
+  }
+  .links a:hover { color: var(--accent); }
+  .links a span { color: var(--muted); font-weight: 400; }
+
+  .colophon { font-size: 13px; color: var(--muted); margin: 0; max-width: 52ch; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Big Sky Bakehouse &middot; Annapolis</p>
+    <h1>What went wrong?</h1>
+    <p class="standfirst">Tap what your loaf did. I'll tell you the likely reasons, ranked, and what to change next bake.</p>
+  </header>
+
+  <div class="sec-label">
+    <h2>Pick the symptom</h2>
+    <span class="hint" id="hint">twelve things that go wrong</span>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <div id="out">
+    <div class="empty">Pick a symptom above and the diagnosis lands here.</div>
+  </div>
+
+  <section class="ask" id="ask" hidden>
+    <div class="sec-label">
+      <h2>Or just describe it</h2>
+      <span class="hint">for the ones that don't fit a box</span>
+    </div>
+
+    <div class="field">
+      <label for="desc">What happened</label>
+      <textarea id="desc" placeholder="Second bake with a new bag of flour. Dough felt slack after bulk, spread out flat on the peel, and the crumb came out wet near the bottom."></textarea>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="temp">Kitchen temp</label>
+        <select id="temp">
+          <option value="">Not sure</option>
+          <option>Under 65&deg;F — cold</option>
+          <option>65–70&deg;F</option>
+          <option>70–75&deg;F</option>
+          <option>75–80&deg;F</option>
+          <option>Over 80&deg;F — warm</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="bulk">Bulk ferment</label>
+        <select id="bulk">
+          <option value="">Not sure</option>
+          <option>Under 3 hours</option>
+          <option>3–5 hours</option>
+          <option>5–8 hours</option>
+          <option>Over 8 hours</option>
+          <option>Overnight on the counter</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="starter">Starter, at its peak</label>
+        <select id="starter">
+          <option value="">Not sure</option>
+          <option>Doubles in 4–6 hours</option>
+          <option>Doubles, but slowly</option>
+          <option>Rises a little, never doubles</option>
+          <option>Barely moves</option>
+          <option>Brand new, under 3 weeks</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="flour">Flour</label>
+        <select id="flour">
+          <option value="">Not sure</option>
+          <option>All-purpose</option>
+          <option>Bread flour</option>
+          <option>Half whole wheat or more</option>
+          <option>Fresh-milled</option>
+          <option>A mix</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="go" id="go" type="button">Work it out</button>
+    <div class="answer" id="answer" hidden></div>
+  </section>
+
+  <section class="capture" id="capture" hidden>
+    <div class="sec-label">
+      <h2>The printable version</h2>
+    </div>
+    <p class="pitch">All twelve of these on one page, drawn, meant for the inside of a cabinet door. I'll send it when it's finished.</p>
+    <form id="capture-form">
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required autocomplete="email" placeholder="you@example.com">
+      </div>
+      <button class="go" type="submit" id="capture-go">Send it to me</button>
+    </form>
+    <p class="note" id="capture-note">One email when the card is ready. Nothing else.</p>
+  </section>
+
+  <footer class="outro">
+    <div class="links">
+      <a href="https://claude.ai/code/artifact/cef56d84-bbcf-444b-ad18-8222fa0e4d0f" target="_blank" rel="noopener">The hydration calculator <span>— free</span></a>
+      <a href="https://claude.ai/code/artifact/fa9e618d-0a94-4a1f-ac62-de8a1d44fbbe" target="_blank" rel="noopener">Sourdough After Day One <span>— keeping, freezing, reheating</span></a>
+      <a href="https://hotplate.com/bigskybakehouse" target="_blank" rel="noopener">Or let me bake it <span>— weekly drops, pickup in Eastport</span></a>
+    </div>
+    <p class="colophon">I bake in Annapolis and I have made every one of these mistakes, most of them more than once. If your loaf did something that isn't on this page, tell me and I'll add it.</p>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ------------------------------------------------------------------
+     CONFIG — the only two lines you edit.
+
+     API_ENDPOINT   Your deployed Worker URL. Leave "" and the
+                    "describe it" box stays hidden; the twelve symptom
+                    paths below work with no server at all.
+                    e.g. "https://bakehouse-diagnose.montana.workers.dev"
+
+     EMAIL_ENDPOINT Your form/newsletter POST URL (MailerLite,
+                    Buttondown, Formspree...). Leave "" and the email
+                    section stays hidden.
+  ------------------------------------------------------------------ */
+
+  var API_ENDPOINT   = "";
+  var EMAIL_ENDPOINT = "";
+
+  var SYMPTOMS = [
+    {
+      id: "flat",
+      name: "Flat and spread out",
+      sub: "Went wide instead of up",
+      lede: "The classic. Nearly always structure, not your oven.",
+      causes: [
+        { name: "Over-proofed", odds: "high", why: "The dough used up its rise before it got to the heat. By the time the oven could lift it, there was nothing left to lift." },
+        { name: "Starter wasn't strong enough", odds: "high", why: "A starter that only limps up to double is fermenting slowly and unevenly. The loaf pays for it hours later." },
+        { name: "Not enough tension in shaping", odds: "mid", why: "Shaping builds the skin that holds the loaf upright. A slack shape relaxes into a puddle on the counter." },
+        { name: "Too much water for that flour", odds: "low", why: "All-purpose can't hold what bread flour holds. Same recipe, different bag, flatter loaf." }
+      ],
+      fix: "Cut bulk short and use the poke test instead of the clock — a floured finger should leave a dent that springs back slowly, not one that stays. Then feed your starter twice a day for three days before you bake again."
+    },
+    {
+      id: "gummy",
+      name: "Gummy and dense",
+      sub: "Wet, claggy crumb",
+      lede: "Four times out of five this isn't a fermentation problem. It's a patience problem.",
+      causes: [
+        { name: "You cut it too warm", odds: "high", why: "Bread keeps cooking as it cools. Slice into it hot and the still-setting starch smears into a paste along the knife." },
+        { name: "Under-baked", odds: "high", why: "The crust can be dark while the middle is ten degrees short. Colour is not doneness." },
+        { name: "Under-proofed", odds: "mid", why: "A short bulk leaves the crumb tight and heavy, which reads as gum even when it's fully baked." }
+      ],
+      fix: "Bake to an internal temperature of 205–210&deg;F, not to a colour. Then leave it alone for two hours, on a rack so the bottom doesn't steam. It is the hardest instruction in baking and the one that fixes the most loaves."
+    },
+    {
+      id: "spring",
+      name: "No oven spring",
+      sub: "Came out the size it went in",
+      lede: "Spring is a race between steam and a setting crust. Something ended it early.",
+      causes: [
+        { name: "No steam in the first half", odds: "high", why: "Without trapped moisture the crust sets in the first few minutes and clamps the loaf shut before it can expand." },
+        { name: "Over-proofed", odds: "high", why: "Same cause as a flat loaf, milder version — the gas was already spent." },
+        { name: "Oven not actually hot enough", odds: "mid", why: "Most home ovens run cool and lie about it. A vessel needs a long preheat to hold real heat." },
+        { name: "Scored too shallow", odds: "low", why: "Without a deliberate weak point the loaf has nowhere to open." }
+      ],
+      fix: "Preheat your dutch oven for a full 45 minutes at 500&deg;F. Lid on for the first 20 minutes, then off. If you're baking on a stone, a tray of boiling water on the rack below does the same job."
+    },
+    {
+      id: "burst",
+      name: "Burst out the side",
+      sub: "Tore where you didn't cut",
+      lede: "The loaf had to expand somewhere, and you didn't give it a door.",
+      causes: [
+        { name: "Score was too shallow", odds: "high", why: "A timid scratch closes up in the heat. The dough then finds the next weakest point, which is usually the seam." },
+        { name: "Under-proofed", odds: "mid", why: "A young dough has a lot of expansion left, and it comes out fast and hard." },
+        { name: "Seam wasn't sealed", odds: "mid", why: "An open seam at the base is a ready-made escape hatch." }
+      ],
+      fix: "One confident cut, blade at about 30&deg; to the surface, roughly half an inch deep. Confidence matters more than artistry here — a hesitant sawing motion drags the skin instead of cutting it."
+    },
+    {
+      id: "tight",
+      name: "Tight, cakey crumb",
+      sub: "Small even holes, heavy slice",
+      lede: "Under-fermented, almost always. This is the opposite failure to a flat loaf.",
+      causes: [
+        { name: "Bulk was too short", odds: "high", why: "Not enough gas got made. Everything downstream is fine, there just isn't much air in it." },
+        { name: "Cold kitchen", odds: "mid", why: "At 65&deg;F fermentation takes roughly twice as long as at 78&deg;F. The recipe's timings were written for someone else's house." },
+        { name: "Degassed during shaping", odds: "mid", why: "Pressing the air out during the final shape undoes hours of work in about thirty seconds." }
+      ],
+      fix: "Bulk until the dough has risen 50–75% and feels domed and alive, not by the clock. In a cold kitchen, find a warm spot — an oven with only the light on sits around 78&deg;F."
+    },
+    {
+      id: "holes",
+      name: "Huge holes or a tunnel",
+      sub: "A cave under the crust",
+      lede: "Two different problems produce this, and the fix depends which.",
+      causes: [
+        { name: "Loose shaping trapped a pocket", odds: "high", why: "A big void just under the top crust is a shaping artefact — air folded in and never pressed out." },
+        { name: "Over-proofed", odds: "mid", why: "Overblown loaves get big ragged holes throughout, not one cavern. If the holes are everywhere, it's this." },
+        { name: "Uneven degassing", odds: "low", why: "Some parts pressed flat, others left full, so the gas collects where it can." }
+      ],
+      fix: "Before the final shape, press the dough out gently and evenly, then roll it up with real surface tension. You want to keep the small bubbles and lose the big ones."
+    },
+    {
+      id: "pale",
+      name: "Pale, soft crust",
+      sub: "No colour, no crackle",
+      lede: "Almost always steam that outstayed its welcome.",
+      causes: [
+        { name: "Lid stayed on too long", odds: "high", why: "Steam is what you want early and exactly what stops browning later. It has to go." },
+        { name: "Under-baked overall", odds: "mid", why: "Colour needs time at heat, and most people pull the loaf about ten minutes early." },
+        { name: "Oven running cool", odds: "mid", why: "A dial that says 450&deg;F is often delivering 420&deg;F." }
+      ],
+      fix: "Lid off for the last 20–25 minutes, and take it further than feels comfortable — properly deep brown, edging toward the colour you'd call burnt on a cake. That's where the flavour is."
+    },
+    {
+      id: "bottom",
+      name: "Burnt bottom",
+      sub: "Black base, fine top",
+      lede: "Conducted heat, not oven heat. The base of your vessel is the problem.",
+      causes: [
+        { name: "Vessel base sits too hot", odds: "high", why: "Cast iron holds enormous heat and dumps it straight into the dough at one point of contact." },
+        { name: "Rack too low", odds: "mid", why: "Most ovens have a hot element under the floor and the bottom third catches it." }
+      ],
+      fix: "Bake on parchment, and slide a second sheet pan onto the rack below to break the direct heat. Moving up to the middle rack fixes the rest."
+    },
+    {
+      id: "sticky",
+      name: "Sticky, unworkable dough",
+      sub: "Glued to everything",
+      lede: "Usually not too much water. Usually not enough gluten yet.",
+      causes: [
+        { name: "Gluten under-developed", odds: "high", why: "Slack, sticky dough that won't hold a shape mostly needs more folds and more time, not more flour." },
+        { name: "Hydration too high for the flour", odds: "high", why: "80% is a dream in strong bread flour and a soup in supermarket all-purpose." },
+        { name: "Kitchen too warm", odds: "mid", why: "Above 80&deg;F dough goes slack fast and gets hard to handle regardless of the recipe." }
+      ],
+      fix: "Drop to 70% hydration until it behaves, and add three or four coil folds spaced half an hour apart. Wet your hands rather than flouring the dough — added flour changes the loaf, water doesn't."
+    },
+    {
+      id: "starter",
+      name: "Starter won't rise",
+      sub: "Sluggish or flat",
+      lede: "Nearly always temperature or rhythm. Rarely dead.",
+      causes: [
+        { name: "Too cold", odds: "high", why: "Under 70&deg;F a starter slows right down. It isn't failing, it's just taking twelve hours to do a six-hour job." },
+        { name: "Feeding schedule is irregular", odds: "high", why: "Starters respond to rhythm. Fed once every few days, it never builds momentum." },
+        { name: "Chlorinated water", odds: "low", why: "Rare, but real in some tap supplies. Leaving water out overnight settles it." }
+      ],
+      fix: "Feed it 1:1:1 twice a day for three days, somewhere around 78&deg;F, and judge it four to six hours after a feed rather than first thing in the morning. Most starters people declare dead are just cold and on a bad schedule."
+    },
+    {
+      id: "sour",
+      name: "Not sour enough",
+      sub: "Or far too sour",
+      lede: "Sourness is a dial, and cold time is the main thing it's connected to.",
+      causes: [
+        { name: "Cold retard length", odds: "high", why: "A long cold proof favours the acid-producing bacteria over the yeast. More hours in the fridge, more tang." },
+        { name: "Fermentation temperature", odds: "mid", why: "Warm and fast makes a mild loaf. Cool and slow makes a sharp one." },
+        { name: "Not enough whole grain", odds: "mid", why: "Whole wheat and rye carry more of what the bacteria eat, so they push sourness up." }
+      ],
+      fix: "For more tang, retard the shaped loaf 24–36 hours in the fridge and swap 10–20% of the flour for whole wheat. For less, shorten the retard and keep the bulk warm."
+    },
+    {
+      id: "tore",
+      name: "Tore while shaping",
+      sub: "Ripped instead of stretching",
+      lede: "The gluten either never formed or has already broken down.",
+      causes: [
+        { name: "Over-fermented", odds: "high", why: "Fermentation eventually eats the structure it built. Past that point the dough goes soupy and tears at a touch." },
+        { name: "Gluten under-developed", odds: "mid", why: "The other end of the same axis — it never got strong enough to stretch in the first place." },
+        { name: "Surface dried out", odds: "low", why: "A skin forms in a dry kitchen and splits while the inside is still moving." }
+      ],
+      fix: "Shorten your bulk by an hour and get your folds in early, in the first two hours while the dough still responds to them. Keep it covered between folds."
+    }
+  ];
+
+  var grid = document.getElementById("grid");
+  var out = document.getElementById("out");
+  var current = null;
+
+  SYMPTOMS.forEach(function (s) {
+    var b = document.createElement("button");
+    b.className = "tile";
+    b.type = "button";
+    b.setAttribute("aria-pressed", "false");
+    b.dataset.id = s.id;
+    b.innerHTML = '<span class="tile-name"></span><span class="tile-sub"></span>';
+    b.querySelector(".tile-name").textContent = s.name;
+    b.querySelector(".tile-sub").textContent = s.sub;
+    b.addEventListener("click", function () { select(s.id); });
+    grid.appendChild(b);
+  });
+
+  function select(id) {
+    var s = SYMPTOMS.filter(function (x) { return x.id === id; })[0];
+    if (!s) return;
+    current = id;
+
+    Array.prototype.forEach.call(grid.children, function (b) {
+      b.setAttribute("aria-pressed", String(b.dataset.id === id));
+    });
+
+    var causes = s.causes.map(function (c, i) {
+      // The bar always shows the raw odds; the words follow rank order, so a
+      // list never reads with two "Most likely" causes in it.
+      var label = i === 0 ? "Most likely"
+                : c.odds === "high" ? "Also likely"
+                : c.odds === "mid" ? "Likely" : "Possible";
+      return '<div class="cause">' +
+               '<div class="cause-head">' +
+                 '<span class="cause-name">' + c.name + '</span>' +
+                 '<span class="odds ' + c.odds + '">' + label + '</span>' +
+               '</div>' +
+               '<div class="bar"><span class="' + c.odds + '"></span></div>' +
+               '<p class="cause-why">' + c.why + '</p>' +
+             '</div>';
+    }).join("");
+
+    out.innerHTML =
+      '<div class="diagnosis">' +
+        '<h3>' + s.name + '</h3>' +
+        '<p class="diag-lede">' + s.lede + '</p>' +
+        '<div class="causes">' + causes + '</div>' +
+        '<div class="fix">' +
+          '<p class="fix-label">Next bake</p>' +
+          '<p>' + s.fix + '</p>' +
+        '</div>' +
+      '</div>';
+
+    out.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  /* ---------- describe-it path (needs the Worker) ---------- */
+
+  var ask = document.getElementById("ask");
+  var go = document.getElementById("go");
+  var answer = document.getElementById("answer");
+  var busy = false;
+
+  if (API_ENDPOINT) ask.hidden = false;
+
+  go.addEventListener("click", function () {
+    if (busy) return;
+
+    var desc = document.getElementById("desc").value.trim();
+    if (!desc) {
+      answer.hidden = false;
+      answer.innerHTML = '<span class="err">Tell me what the loaf did first.</span>';
+      return;
+    }
+
+    var facts = {};
+    [["kitchen", "temp"], ["bulk", "bulk"], ["starter", "starter"], ["flour", "flour"]].forEach(function (p) {
+      var v = document.getElementById(p[1]).value;
+      if (v) facts[p[0]] = v;
+    });
+
+    var picked = current ? SYMPTOMS.filter(function (x) { return x.id === current; })[0] : null;
+
+    busy = true;
+    go.disabled = true;
+    go.textContent = "Working it out";
+    answer.hidden = false;
+    answer.innerHTML = '<span class="thinking">Reading it back&hellip;</span>';
+
+    fetch(API_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        description: desc,
+        facts: facts,
+        symptom: picked ? picked.name : null
+      })
+    }).then(function (r) {
+      return r.json().then(function (data) { return { ok: r.ok, status: r.status, data: data }; });
+    }).then(function (res) {
+      if (res.ok && res.data && res.data.answer) {
+        answer.textContent = res.data.answer;
+      } else if (res.status === 429) {
+        answer.innerHTML = '<span class="err">That\'s a lot of loaves at once — give it a minute and try again.</span>';
+      } else {
+        answer.innerHTML = '<span class="err">That didn\'t go through. Pick the closest symptom above instead, it covers most of what goes wrong.</span>';
+      }
+    }).catch(function () {
+      answer.innerHTML = '<span class="err">That didn\'t go through. Pick the closest symptom above instead, it covers most of what goes wrong.</span>';
+    }).then(function () {
+      busy = false;
+      go.disabled = false;
+      go.textContent = "Work it out";
+    });
+  });
+
+  /* ---------- email capture ---------- */
+
+  var capture = document.getElementById("capture");
+  var captureForm = document.getElementById("capture-form");
+  var captureNote = document.getElementById("capture-note");
+  var captureGo = document.getElementById("capture-go");
+
+  if (EMAIL_ENDPOINT) capture.hidden = false;
+
+  captureForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var email = document.getElementById("email").value.trim();
+    if (!email) return;
+
+    captureGo.disabled = true;
+    captureGo.textContent = "Sending";
+
+    fetch(EMAIL_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify({ email: email })
+    }).then(function (r) {
+      if (r.ok) {
+        captureForm.hidden = true;
+        captureNote.textContent = "Got it. I'll send the card when it's drawn.";
+      } else {
+        captureNote.textContent = "That didn't save. Try again in a moment.";
+        captureGo.disabled = false;
+        captureGo.textContent = "Send it to me";
+      }
+    }).catch(function () {
+      captureNote.textContent = "That didn't save. Try again in a moment.";
+      captureGo.disabled = false;
+      captureGo.textContent = "Send it to me";
+    });
+  });
+})();
+</script>
+</body>
+</html>
