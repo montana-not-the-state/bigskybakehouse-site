@@ -1,0 +1,9 @@
+# Repo files that are source, not part of the website.
+# Same syntax as .gitignore. Wrangler skips these when uploading assets.
+wrangler.toml
+.assetsignore
+.gitignore
+.nojekyll
+README.md
+worker/
+node_modules/
