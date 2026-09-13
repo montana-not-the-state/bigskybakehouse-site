@@ -128,3 +128,15 @@ pages — don't restyle this one on its own.
   it's one less thing to maintain and one less thing to get wrong.
 - **Nothing from the bakehouse vault.** The operating plan, the margins and the
   Oscar's prep stay in the private repo. This repo is public.
+
+---
+
+## Deploying
+
+The site deploys itself. Push to main and Cloudflare Workers Builds rebuilds and redeploys the Worker `bigskybakehouse`, usually within a minute or two.
+
+`wrangler.toml` names the Worker and points its assets directory at the repo root. `.assetsignore` keeps the README, `worker/` and the dotfiles out of the upload. There is no build command because nothing compiles; the deploy command is `npx wrangler deploy`.
+
+The site answers on bigskybakehouse.com and www.bigskybakehouse.com, both attached to the Worker as custom domains, and on bigskybakehouse.montanacp.workers.dev.
+
+Watch a build under Workers & Pages, then bigskybakehouse, then Deployments.
