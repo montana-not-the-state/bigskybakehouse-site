@@ -33,6 +33,11 @@ const CATALOG = {
   "ooey-gooey":        { name: "The Ooey Gooey",                    cents: 700, file: "the-ooey-gooey-cinnamon-rolls.pdf" },
   "chocolate-chip":    { name: "Sourdough Chocolate Chip Cookies",  cents: 700, file: "sourdough-chocolate-chip-cookies.pdf" },
   "plain-jane-loaf":   { name: "Plain Jane Loaf",                   cents: 0,   file: "plain-jane-loaf.pdf" },
+
+  /* Physical goods. `ship: true` is the whole difference: Stripe has to ask
+     for an address, and there is no file to hand back afterwards. */
+  "kenzo-starter-kit": { name: "A Piece of Kenzo, dried starter",    cents: 1500, ship: true },
+  "pancake-mix":       { name: "Sourdough Pancake Mix",              cents: 0,    ship: true },
 };
 
 const SITE = "https://bigskybakehouse.com";
@@ -94,17 +99,27 @@ export default {
          zero charge, and there is nothing to verify afterwards. */
       if (item.cents === 0) return json({ free: true }, 200, origin);
 
-      const session = await stripe(env, "checkout/sessions", "POST", {
+      const params = {
         mode: "payment",
         "line_items[0][price_data][currency]": "usd",
         "line_items[0][price_data][unit_amount]": String(item.cents),
-        "line_items[0][price_data][product_data][name]": item.name + " recipe card",
+        "line_items[0][price_data][product_data][name]": item.name,
         "line_items[0][quantity]": "1",
         "metadata[slug]": slug,
-        success_url: SITE + "/recipes/?paid={CHECKOUT_SESSION_ID}",
+        success_url: SITE + "/shop/?paid={CHECKOUT_SESSION_ID}",
         cancel_url: SITE + "/r/" + slug,
-});
+      };
 
+      /* Anything posted needs somewhere to post it to. Stripe collects and
+         validates the address, so it never passes through this Worker. US
+         only for now: interstate cottage food rules are unresolved and
+         international is a different problem again. */
+      if (item.ship) {
+        params["shipping_address_collection[allowed_countries][0]"] = "US";
+        params["phone_number_collection[enabled]"] = "true";
+      }
+
+      const session = await stripe(env, "checkout/sessions", "POST", params);
       return json({ url: session.url }, 200, origin);
     }
 
@@ -126,6 +141,11 @@ export default {
 
       const item = CATALOG[session.metadata?.slug];
       if (!item) return json({ error: "No such recipe" }, 404, origin);
+
+      /* Nothing to download for something that arrives in the post. */
+      if (item.ship) {
+        return json({ shipped: true, name: item.name }, 200, origin);
+      }
 
       const obj = await env.RECIPES.get(item.file);
       if (!obj) return json({ error: "The file is missing. Email me and I will send it." }, 500, origin);

@@ -1,1 +1,5 @@
-/r/*  /recipes/  200
+# Deep links to a single item open the shop with its drawer already open.
+/r/*        /shop/   200
+# /recipes/ was live for about an hour before the shop absorbed it.
+/recipes    /shop/   301
+/recipes/*  /shop/   301

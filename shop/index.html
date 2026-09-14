@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>The Recipe Cards · Big Sky Bakehouse</title>
-<meta name="description" content="One-page recipe cards from Big Sky Bakehouse. The sourdough I actually bake, written the way I actually make it.">
+<title>The Shop · Big Sky Bakehouse</title>
+<meta name="description" content="Recipe cards, dried starter and mixes from Big Sky Bakehouse in Annapolis. The sourdough I actually bake, and what you need to bake it.">
 <meta name="theme-color" content="#1B2A41">
 <link rel="icon" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -418,6 +418,10 @@ footer a:hover,footer a:focus-visible{border-bottom-color:var(--accent);}
 .r-card:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 .r-shot{background:var(--img-bg);aspect-ratio:1000/760;overflow:hidden;position:relative}
 .r-shot img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
+/* No photo yet. The mark on the cream ground reads as a considered placeholder
+   where an empty panel just reads as a broken image. */
+.r-shot.empty{display:flex;align-items:center;justify-content:center}
+.r-shot.empty img{width:42%;height:auto;object-fit:contain;opacity:.26}
 .r-body{padding:1rem 1.1rem 1.2rem}
 .r-name{font-family:'Bitter',Georgia,serif;font-weight:700;font-size:var(--step-1);
   color:var(--heading);margin:0 0 .35rem;line-height:1.2}
@@ -489,18 +493,25 @@ main{padding-block:2.75rem 3rem}
 <div class="band">
   <div class="band-inner">
     <a class="back" href="/">Big Sky Bakehouse</a>
-    <h1>The Recipe Cards</h1>
-    <p class="standfirst">One page each. The sourdough I actually bake, written the way I actually make it, sized for a kitchen counter with flour on it.</p>
+    <h1>The Shop</h1>
+    <p class="standfirst">The sourdough I actually bake, written the way I actually make it. Plus the things you need to bake it, posted from my kitchen.</p>
   </div>
 </div>
 
 <main>
   <div class="section-head">
-    <h2>Pick a card</h2>
-    <p class="section-note">Tap any card to see the real thing before you decide. The Plain Jane Loaf is free, because it is the one I would start you on.</p>
+    <h2>Recipe cards</h2>
+    <p class="section-note">One page each, sized for a counter with flour on it. Tap any card to see the real thing before you decide. The Plain Jane Loaf is free, because it is the one I would start you on.</p>
   </div>
 
-  <ul class="grid" id="grid"></ul>
+  <ul class="grid" id="grid-cards"></ul>
+
+  <div class="section-head" style="padding-top:3rem">
+    <h2>From my kitchen</h2>
+    <p class="section-note">Things I make here and put in the post. Not recipes, the actual stuff.</p>
+  </div>
+
+  <ul class="grid" id="grid-kitchen"></ul>
 
   <p class="disclosure" id="foot"></p>
 </main>
@@ -531,38 +542,51 @@ main{padding-block:2.75rem 3rem}
      `slug` is permanent once posted anywhere. Changing it breaks every
      link already out in the world, so treat it as write-once. */
   var RECIPES = [
-    { slug:"plain-jane-loaf", name:"Plain Jane Loaf", price:0, ready:false,
+    { slug:"plain-jane-loaf", section:"cards", name:"Plain Jane Loaf", price:0, ready:false,
       blurb:"My everyday sourdough. One loaf, no fuss, the one I bake more than everything else put together.",
-      preview:"/recipes/previews/plain-jane-loaf-preview.png",
+      preview:"/shop/previews/plain-jane-loaf-preview.png",
       long:"The loaf the whole bakehouse is built on. Plain flour, water, salt and Kenzo, and enough detail on the timings that you can fit it around a work day." },
 
-    { slug:"soft-shells", name:"Soft Shells", price:7, ready:true,
+    { slug:"soft-shells", section:"cards", name:"Soft Shells", price:7, ready:true,
       blurb:"Sourdough tortillas. Soft enough to fold cold, which is the only test that matters.",
-      preview:"/recipes/previews/soft-shells-tortillas-preview.png",
+      preview:"/shop/previews/soft-shells-tortillas-preview.png",
       long:"Discard tortillas that stay soft the next day instead of cracking. They cook in a dry pan in under a minute a side, so a batch happens faster than deciding what to put in them." },
 
-    { slug:"brown-butter-bliss", name:"Brown Butter Bliss", price:7, ready:false,
+    { slug:"brown-butter-bliss", section:"cards", name:"Brown Butter Bliss", price:7, ready:false,
       blurb:"Brown butter and sourdough discard, in a cookie big enough to need both hands.",
       preview:"",
       long:"The cookie from the drops. Browned butter, a long cold rest, and a three tablespoon scoop, which is the part most recipes get wrong and the reason yours come out smaller than mine." },
 
-    { slug:"zaa-crust", name:"Zaa Crust", price:7, ready:false,
+    { slug:"zaa-crust", section:"cards", name:"Zaa Crust", price:7, ready:false,
       blurb:"Sourdough pizza crust that holds a slice flat instead of folding in half.",
-      preview:"/recipes/previews/sourdough-pizza-crust-preview.png",
+      preview:"/shop/previews/sourdough-pizza-crust-preview.png",
       long:"Cold fermented, stretched by hand, built for a home oven rather than a wood fire." },
 
-    { slug:"ooey-gooey", name:"The Ooey Gooey", price:7, ready:false,
+    { slug:"ooey-gooey", section:"cards", name:"The Ooey Gooey", price:7, ready:false,
       blurb:"The cinnamon rolls. The ones that sell out first, every single drop.",
-      preview:"/recipes/previews/the-ooey-gooey-cinnamon-rolls-preview.png",
+      preview:"/shop/previews/the-ooey-gooey-cinnamon-rolls-preview.png",
       long:"Overnight rolls so the morning is just bake and glaze." },
 
-    { slug:"chocolate-chip", name:"Sourdough Chocolate Chip Cookies", price:7, ready:false,
+    { slug:"chocolate-chip", section:"cards", name:"Sourdough Chocolate Chip Cookies", price:7, ready:false,
       blurb:"Discard cookies, crisp at the edge and soft the whole way in.",
-      preview:"/recipes/previews/sourdough-chocolate-chip-cookies-preview.png",
-      long:"A good way to use a jar of discard that would otherwise go in the bin." }
+      preview:"/shop/previews/sourdough-chocolate-chip-cookies-preview.png",
+      long:"A good way to use a jar of discard that would otherwise go in the bin." },
+
+    /* Physical. These get posted, which means Stripe has to collect an address.
+       The Worker sets that per item, so nothing here decides it. */
+    { slug:"kenzo-starter-kit", section:"kitchen", name:"A Piece of Kenzo", price:15, ready:false, physical:true,
+      blurb:"My starter, dried and put in an envelope, with seven days of video to bring him back.",
+      preview:"",
+      long:"Kenzo is the starter everything here is baked with. Dried, he keeps for years and travels in a envelope. Add water and flour and he wakes up over about a week. The videos are the part that matters: day three is when nothing has happened and everyone decides they have killed it, so I filmed my own jar every day to show you that flat and boring is exactly right." },
+
+    { slug:"pancake-mix", section:"kitchen", name:"Sourdough Pancake Mix", price:0, ready:false, physical:true,
+      blurb:"Coming soon. Weekend pancakes without thinking about it the night before.",
+      preview:"",
+      long:"Not made yet. It is on the list." }
   ];
 
-  var grid = document.getElementById("grid");
+  var gridCards = document.getElementById("grid-cards");
+  var gridKitchen = document.getElementById("grid-kitchen");
   var scrim = document.getElementById("scrim");
   var drawer = document.getElementById("drawer");
   var dbody = document.getElementById("dbody");
@@ -584,7 +608,7 @@ main{padding-block:2.75rem 3rem}
 
     var shot = r.preview
       ? '<div class="r-shot"><img loading="lazy" src="' + r.preview + '" alt=""></div>'
-      : '<div class="r-shot"></div>';
+      : '<div class="r-shot empty"><img loading="lazy" src="/shop/previews/_mark.png" alt=""></div>';
 
     b.innerHTML =
       shot +
@@ -621,8 +645,10 @@ main{padding-block:2.75rem 3rem}
 
     var prev = r.preview
       ? '<div class="r-preview"><img src="' + r.preview + '" alt="Preview of the ' + r.name + ' card"></div>' +
-        '<p class="r-cap">The real card, top half. This is what prints.</p>'
-      : '<div class="r-warn">No preview yet for this one.</div>';
+        (r.physical ? '' : '<p class="r-cap">The real card, top half. This is what prints.</p>')
+      : (r.physical
+          ? '<div class="r-preview r-shot empty" style="padding:2.5rem 0"><img src="/shop/previews/_mark.png" alt=""></div>'
+          : '<div class="r-warn">No preview yet for this one.</div>');
 
     dbody.innerHTML =
       '<button class="r-close" id="x" aria-label="Close">✕</button>' +
@@ -685,10 +711,13 @@ main{padding-block:2.75rem 3rem}
     if (!drawer.hidden) close(false);
   });
 
-  shown().forEach(function(r){ grid.appendChild(card(r)); });
+  shown().forEach(function(r){
+    var into = (r.section === "kitchen") ? gridKitchen : gridCards;
+    into.appendChild(card(r));
+  });
 
   document.getElementById("foot").textContent =
-    "Every card is one page, sized to print at home. They are mine, from my kitchen in Annapolis.";
+    "Cards are one page, sized to print at home. Everything here is mine, from my kitchen in Annapolis.";
 
   /* Deep link: /r/<slug> is rewritten to this page, so read it on load. */
   var m = location.pathname.match(/^\/r\/([a-z0-9-]+)/);

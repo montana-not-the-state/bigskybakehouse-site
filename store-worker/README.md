@@ -91,7 +91,7 @@ It prints a URL like `https://bakehouse-store.<your-name>.workers.dev`.
 
 ### 7. Switch the buttons on
 
-Open `recipes/index.html` in the site folder, find `CHECKOUT_URL`, and paste
+Open `shop/index.html` in the site folder, find `CHECKOUT_URL`, and paste
 the URL between the quotes. Commit and push, and the Buy buttons go live.
 
 ---
