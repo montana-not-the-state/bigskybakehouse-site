@@ -6,4 +6,5 @@ wrangler.toml
 .nojekyll
 README.md
 worker/
+store-worker/
 node_modules/
