@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>What Went Wrong — Big Sky Bakehouse</title>
+<title>What Went Wrong · Big Sky Bakehouse</title>
 <meta name="description" content="A sourdough diagnostic from Big Sky Bakehouse in Annapolis. Tap what your loaf did and get the likely causes, ranked, with what to change next bake.">
 <link rel="icon" href="favicon.png" type="image/png">
 <meta name="theme-color" content="#F5F0E6">
@@ -286,11 +286,11 @@
         <label for="temp">Kitchen temp</label>
         <select id="temp">
           <option value="">Not sure</option>
-          <option>Under 65&deg;F — cold</option>
+          <option>Under 65&deg;F (cold)</option>
           <option>65–70&deg;F</option>
           <option>70–75&deg;F</option>
           <option>75–80&deg;F</option>
-          <option>Over 80&deg;F — warm</option>
+          <option>Over 80&deg;F (warm)</option>
         </select>
       </div>
       <div class="field">
@@ -349,9 +349,9 @@
 
   <footer class="outro">
     <div class="links">
-      <a href="https://claude.ai/code/artifact/cef56d84-bbcf-444b-ad18-8222fa0e4d0f" target="_blank" rel="noopener">The hydration calculator <span>— free</span></a>
-      <a href="https://claude.ai/code/artifact/fa9e618d-0a94-4a1f-ac62-de8a1d44fbbe" target="_blank" rel="noopener">Sourdough After Day One <span>— keeping, freezing, reheating</span></a>
-      <a href="https://hotplate.com/bigskybakehouse" target="_blank" rel="noopener">Or let me bake it <span>— weekly drops, pickup in Eastport</span></a>
+      <a href="https://claude.ai/code/artifact/cef56d84-bbcf-444b-ad18-8222fa0e4d0f" target="_blank" rel="noopener">The hydration calculator <span>· free</span></a>
+      <a href="https://claude.ai/code/artifact/fa9e618d-0a94-4a1f-ac62-de8a1d44fbbe" target="_blank" rel="noopener">Sourdough After Day One <span>· keeping, freezing, reheating</span></a>
+      <a href="https://hotplate.com/bigskybakehouse" target="_blank" rel="noopener">Or let me bake it <span>· weekly drops, pickup in Eastport</span></a>
     </div>
     <p class="colophon">I bake in Annapolis and I have made every one of these mistakes, most of them more than once. If your loaf did something that isn't on this page, tell me and I'll add it.</p>
   </footer>
@@ -363,7 +363,7 @@
   "use strict";
 
   /* ------------------------------------------------------------------
-     CONFIG — the only two lines you edit.
+     CONFIG. The only two lines you edit.
 
      API_ENDPOINT   Your deployed Worker URL. Leave "" and the
                     "describe it" box stays hidden; the twelve symptom
@@ -390,7 +390,7 @@
         { name: "Not enough tension in shaping", odds: "mid", why: "Shaping builds the skin that holds the loaf upright. A slack shape relaxes into a puddle on the counter." },
         { name: "Too much water for that flour", odds: "low", why: "All-purpose can't hold what bread flour holds. Same recipe, different bag, flatter loaf." }
       ],
-      fix: "Cut bulk short and use the poke test instead of the clock — a floured finger should leave a dent that springs back slowly, not one that stays. Then feed your starter twice a day for three days before you bake again."
+      fix: "Cut bulk short and use the poke test instead of the clock. A floured finger should leave a dent that springs back slowly, not one that stays. Then feed your starter twice a day for three days before you bake again."
     },
     {
       id: "gummy",
@@ -411,7 +411,7 @@
       lede: "Spring is a race between steam and a setting crust. Something ended it early.",
       causes: [
         { name: "No steam in the first half", odds: "high", why: "Without trapped moisture the crust sets in the first few minutes and clamps the loaf shut before it can expand." },
-        { name: "Over-proofed", odds: "high", why: "Same cause as a flat loaf, milder version — the gas was already spent." },
+        { name: "Over-proofed", odds: "high", why: "Same cause as a flat loaf, milder version. The gas was already spent." },
         { name: "Oven not actually hot enough", odds: "mid", why: "Most home ovens run cool and lie about it. A vessel needs a long preheat to hold real heat." },
         { name: "Scored too shallow", odds: "low", why: "Without a deliberate weak point the loaf has nowhere to open." }
       ],
@@ -427,7 +427,7 @@
         { name: "Under-proofed", odds: "mid", why: "A young dough has a lot of expansion left, and it comes out fast and hard." },
         { name: "Seam wasn't sealed", odds: "mid", why: "An open seam at the base is a ready-made escape hatch." }
       ],
-      fix: "One confident cut, blade at about 30&deg; to the surface, roughly half an inch deep. Confidence matters more than artistry here — a hesitant sawing motion drags the skin instead of cutting it."
+      fix: "One confident cut, blade at about 30&deg; to the surface, roughly half an inch deep. Confidence matters more than artistry here. A hesitant sawing motion drags the skin instead of cutting it."
     },
     {
       id: "tight",
@@ -439,7 +439,7 @@
         { name: "Cold kitchen", odds: "mid", why: "At 65&deg;F fermentation takes roughly twice as long as at 78&deg;F. The recipe's timings were written for someone else's house." },
         { name: "Degassed during shaping", odds: "mid", why: "Pressing the air out during the final shape undoes hours of work in about thirty seconds." }
       ],
-      fix: "Bulk until the dough has risen 50–75% and feels domed and alive, not by the clock. In a cold kitchen, find a warm spot — an oven with only the light on sits around 78&deg;F."
+      fix: "Bulk until the dough has risen 50–75% and feels domed and alive, not by the clock. In a cold kitchen, find a warm spot. An oven with only the light on sits around 78&deg;F."
     },
     {
       id: "holes",
@@ -447,7 +447,7 @@
       sub: "A cave under the crust",
       lede: "Two different problems produce this, and the fix depends which.",
       causes: [
-        { name: "Loose shaping trapped a pocket", odds: "high", why: "A big void just under the top crust is a shaping artefact — air folded in and never pressed out." },
+        { name: "Loose shaping trapped a pocket", odds: "high", why: "A big void just under the top crust is a shaping artefact. Air folded in and never pressed out." },
         { name: "Over-proofed", odds: "mid", why: "Overblown loaves get big ragged holes throughout, not one cavern. If the holes are everywhere, it's this." },
         { name: "Uneven degassing", odds: "low", why: "Some parts pressed flat, others left full, so the gas collects where it can." }
       ],
@@ -463,7 +463,7 @@
         { name: "Under-baked overall", odds: "mid", why: "Colour needs time at heat, and most people pull the loaf about ten minutes early." },
         { name: "Oven running cool", odds: "mid", why: "A dial that says 450&deg;F is often delivering 420&deg;F." }
       ],
-      fix: "Lid off for the last 20–25 minutes, and take it further than feels comfortable — properly deep brown, edging toward the colour you'd call burnt on a cake. That's where the flavour is."
+      fix: "Lid off for the last 20–25 minutes, and take it further than feels comfortable, to a properly deep brown, edging toward the colour you'd call burnt on a cake. That's where the flavour is."
     },
     {
       id: "bottom",
@@ -486,7 +486,7 @@
         { name: "Hydration too high for the flour", odds: "high", why: "80% is a dream in strong bread flour and a soup in supermarket all-purpose." },
         { name: "Kitchen too warm", odds: "mid", why: "Above 80&deg;F dough goes slack fast and gets hard to handle regardless of the recipe." }
       ],
-      fix: "Drop to 70% hydration until it behaves, and add three or four coil folds spaced half an hour apart. Wet your hands rather than flouring the dough — added flour changes the loaf, water doesn't."
+      fix: "Drop to 70% hydration until it behaves, and add three or four coil folds spaced half an hour apart. Wet your hands rather than flouring the dough. Added flour changes the loaf, water doesn't."
     },
     {
       id: "starter",
@@ -519,7 +519,7 @@
       lede: "The gluten either never formed or has already broken down.",
       causes: [
         { name: "Over-fermented", odds: "high", why: "Fermentation eventually eats the structure it built. Past that point the dough goes soupy and tears at a touch." },
-        { name: "Gluten under-developed", odds: "mid", why: "The other end of the same axis — it never got strong enough to stretch in the first place." },
+        { name: "Gluten under-developed", odds: "mid", why: "The other end of the same axis. It never got strong enough to stretch in the first place." },
         { name: "Surface dried out", odds: "low", why: "A skin forms in a dry kitchen and splits while the inside is still moving." }
       ],
       fix: "Shorten your bulk by an hour and get your folds in early, in the first two hours while the dough still responds to them. Keep it covered between folds."
@@ -629,7 +629,7 @@
       if (res.ok && res.data && res.data.answer) {
         answer.textContent = res.data.answer;
       } else if (res.status === 429) {
-        answer.innerHTML = '<span class="err">That\'s a lot of loaves at once — give it a minute and try again.</span>';
+        answer.innerHTML = '<span class="err">That\'s a lot of loaves at once. Give it a minute and try again.</span>';
       } else {
         answer.innerHTML = '<span class="err">That didn\'t go through. Pick the closest symptom above instead, it covers most of what goes wrong.</span>';
       }
