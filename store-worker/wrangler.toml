@@ -1,0 +1,15 @@
+name = "bakehouse-store"
+main = "src/index.js"
+compatibility_date = "2026-09-13"
+
+# Where the recipe PDFs live. Private bucket, no public URL.
+# The only way bytes come out is through this Worker, after Stripe
+# confirms the payment.
+[[r2_buckets]]
+binding = "RECIPES"
+bucket_name = "bakehouse-recipes"
+
+# The Stripe key is NOT stored here. Set it once, from your terminal:
+#   npx wrangler secret put STRIPE_SECRET_KEY
+# Cloudflare stores it encrypted. It never appears in this repo, and
+# I never see it.
