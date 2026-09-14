@@ -56,7 +56,15 @@
   .az-smile{position:absolute;left:-3px;right:-7px;bottom:-7px;height:7px;border-bottom:1.6px solid currentColor;border-radius:0 0 60% 60%}
   footer{font:500 10px/1 'Karla',sans-serif;letter-spacing:.22em;text-transform:uppercase;
          color:rgba(245,240,230,.45);margin-top:32px;text-align:center}
-</style>
+
+    /* The list is really two groups: buy the bread, or bake it yourself.
+       A quiet label does that work once, so the buttons underneath can
+       just name themselves instead of each carrying the framing. */
+    .group{display:flex;align-items:center;gap:12px;margin:26px 0 2px;
+      font:600 11px 'Karla',system-ui,sans-serif;letter-spacing:.18em;
+      text-transform:uppercase;color:var(--accent-on-dark)}
+    .group::after{content:"";flex:1;height:1px;background:rgba(245,240,230,.22)}
+  </style>
 </head>
 <body>
 <main class="wrap">
@@ -74,7 +82,9 @@
     <a class="btn primary" href="https://www.hotplate.com/bigskybakehouse" target="_blank" rel="noopener"><span class="n">01</span><span>Order Fresh Sourdough</span></a>
     <a class="btn" href="https://www.hotplate.com/bigskybakehouse?sms_reminder=true" target="_blank" rel="noopener"><span class="n">02</span><span>Never Miss a Pre-Order</span></a>
     <a class="btn" href="https://www.hotplate.com/bigskybakehouse?gift=true" target="_blank" rel="noopener"><span class="n">03</span><span>Buy a Gift Card</span></a>
-    <a class="btn" href="/shelf/"><span class="n">04</span><span>Shop My Favorites</span></a>
+    <p class="group">Or bake it yourself</p>
+    <a class="btn" href="/recipes/"><span class="n">04</span><span>Get My Recipe Cards</span></a>
+    <a class="btn" href="/shelf/"><span class="n">05</span><span>The Tools I Use</span></a>
   </nav>
 
   <div class="social">
