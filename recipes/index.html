@@ -474,6 +474,14 @@ footer a:hover,footer a:focus-visible{border-bottom-color:var(--accent);}
 @media(min-width:640px){.grid{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:900px){.grid{grid-template-columns:repeat(3,1fr)}}
 
+/* ---- spacing ---- */
+/* The shelf's `main` has no top padding because its first section follows a
+   band on a page you scroll straight past. Here "Pick a card" is the first
+   thing you read after the header, so it needs room to breathe above it. */
+main{padding-block:2.75rem 3rem}
+.section-head{padding-bottom:2rem}
+
+
 </style>
 </head>
 <body>
@@ -486,7 +494,7 @@ footer a:hover,footer a:focus-visible{border-bottom-color:var(--accent);}
   </div>
 </div>
 
-<main class="wrap">
+<main>
   <div class="section-head">
     <h2>Pick a card</h2>
     <p class="section-note">Tap any card to see the real thing before you decide. The Plain Jane Loaf is free, because it is the one I would start you on.</p>
@@ -528,27 +536,27 @@ footer a:hover,footer a:focus-visible{border-bottom-color:var(--accent);}
       preview:"/recipes/previews/plain-jane-loaf-preview.png",
       long:"The loaf the whole bakehouse is built on. Plain flour, water, salt and Kenzo, and enough detail on the timings that you can fit it around a work day." },
 
-    { slug:"soft-shells", name:"Soft Shells", price:5, ready:true,
+    { slug:"soft-shells", name:"Soft Shells", price:7, ready:true,
       blurb:"Sourdough tortillas. Soft enough to fold cold, which is the only test that matters.",
       preview:"/recipes/previews/soft-shells-tortillas-preview.png",
       long:"Discard tortillas that stay soft the next day instead of cracking. They cook in a dry pan in under a minute a side, so a batch happens faster than deciding what to put in them." },
 
-    { slug:"brown-butter-bliss", name:"Brown Butter Bliss", price:5, ready:false,
+    { slug:"brown-butter-bliss", name:"Brown Butter Bliss", price:7, ready:false,
       blurb:"Brown butter and sourdough discard, in a cookie big enough to need both hands.",
       preview:"",
       long:"The cookie from the drops. Browned butter, a long cold rest, and a three tablespoon scoop, which is the part most recipes get wrong and the reason yours come out smaller than mine." },
 
-    { slug:"zaa-crust", name:"Zaa Crust", price:5, ready:false,
+    { slug:"zaa-crust", name:"Zaa Crust", price:7, ready:false,
       blurb:"Sourdough pizza crust that holds a slice flat instead of folding in half.",
       preview:"/recipes/previews/sourdough-pizza-crust-preview.png",
       long:"Cold fermented, stretched by hand, built for a home oven rather than a wood fire." },
 
-    { slug:"ooey-gooey", name:"The Ooey Gooey", price:5, ready:false,
+    { slug:"ooey-gooey", name:"The Ooey Gooey", price:7, ready:false,
       blurb:"The cinnamon rolls. The ones that sell out first, every single drop.",
       preview:"/recipes/previews/the-ooey-gooey-cinnamon-rolls-preview.png",
       long:"Overnight rolls so the morning is just bake and glaze." },
 
-    { slug:"chocolate-chip", name:"Sourdough Chocolate Chip Cookies", price:5, ready:false,
+    { slug:"chocolate-chip", name:"Sourdough Chocolate Chip Cookies", price:7, ready:false,
       blurb:"Discard cookies, crisp at the edge and soft the whole way in.",
       preview:"/recipes/previews/sourdough-chocolate-chip-cookies-preview.png",
       long:"A good way to use a jar of discard that would otherwise go in the bin." }

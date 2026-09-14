@@ -23,15 +23,15 @@ const ALLOWED_ORIGINS = [
    for a penny. The page sends only a slug; this file decides what that
    costs and which file it unlocks.
 
-   cents  what Stripe charges, in cents. 500 = $5.00
+   cents  what Stripe charges, in cents. 700 = $7.00
    file   the object key in the R2 bucket
 ------------------------------------------------------------------ */
 const CATALOG = {
-  "soft-shells":       { name: "Soft Shells",                       cents: 500, file: "soft-shells-tortillas.pdf" },
-  "brown-butter-bliss":{ name: "Brown Butter Bliss",                cents: 500, file: "brown-butter-bliss.pdf" },
-  "zaa-crust":         { name: "Zaa Crust",                         cents: 500, file: "sourdough-pizza-crust.pdf" },
-  "ooey-gooey":        { name: "The Ooey Gooey",                    cents: 500, file: "the-ooey-gooey-cinnamon-rolls.pdf" },
-  "chocolate-chip":    { name: "Sourdough Chocolate Chip Cookies",  cents: 500, file: "sourdough-chocolate-chip-cookies.pdf" },
+  "soft-shells":       { name: "Soft Shells",                       cents: 700, file: "soft-shells-tortillas.pdf" },
+  "brown-butter-bliss":{ name: "Brown Butter Bliss",                cents: 700, file: "brown-butter-bliss.pdf" },
+  "zaa-crust":         { name: "Zaa Crust",                         cents: 700, file: "sourdough-pizza-crust.pdf" },
+  "ooey-gooey":        { name: "The Ooey Gooey",                    cents: 700, file: "the-ooey-gooey-cinnamon-rolls.pdf" },
+  "chocolate-chip":    { name: "Sourdough Chocolate Chip Cookies",  cents: 700, file: "sourdough-chocolate-chip-cookies.pdf" },
   "plain-jane-loaf":   { name: "Plain Jane Loaf",                   cents: 0,   file: "plain-jane-loaf.pdf" },
 };
 
