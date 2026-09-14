@@ -478,6 +478,18 @@ footer a:hover,footer a:focus-visible{border-bottom-color:var(--accent);}
 @media(min-width:640px){.grid{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:900px){.grid{grid-template-columns:repeat(3,1fr)}}
 
+
+/* the card, delivered */
+.r-got{margin:0 0 .4rem;font-family:'Bitter',Georgia,serif;font-weight:700;
+  font-size:var(--step-2);color:var(--heading)}
+.r-frame{margin-top:1rem;border:1px solid var(--card-border);border-radius:12px;
+  overflow:hidden;background:#fff;height:min(62vh,620px)}
+.r-frame iframe{width:100%;height:100%;border:0;display:block}
+.r-dl{display:block;text-align:center;margin-top:.9rem;background:var(--cta-bg);
+  color:var(--cta-text);border-radius:10px;padding:.95rem 1rem;text-decoration:none;
+  font-family:'Karla',sans-serif;font-weight:700;font-size:var(--step-0)}
+.r-dl:hover{background:var(--cta-bg-hover)}
+
 /* ---- spacing ---- */
 /* The shelf's `main` has no top padding because its first section follows a
    band on a page you scroll straight past. Here "Pick a card" is the first
@@ -508,7 +520,7 @@ main{padding-block:2.75rem 3rem}
 
   <div class="section-head" style="padding-top:3rem">
     <h2>From my kitchen</h2>
-    <p class="section-note">Things I make here and put in the post. Not recipes, the actual stuff.</p>
+    <p class="section-note">Made here, posted anywhere in Maryland. Not recipes, the actual stuff.</p>
   </div>
 
   <ul class="grid" id="grid-kitchen"></ul>
@@ -535,7 +547,7 @@ main{padding-block:2.75rem 3rem}
                     "Coming soon" with no price. Set false before launch
                     if you would rather they stayed private.
      ------------------------------------------------------------------ */
-  var CHECKOUT_URL = "";
+  var CHECKOUT_URL = "https://bakehouse-store.montanacp.workers.dev/checkout";
   var SHOW_UNREADY = true;
 
   /* Recipes. `ready:false` means the card itself is not finished yet.
@@ -718,6 +730,73 @@ main{padding-block:2.75rem 3rem}
 
   document.getElementById("foot").textContent =
     "Cards are one page, sized to print at home. Everything here is mine, from my kitchen in Annapolis.";
+
+
+  /* ------------------------------------------------------------------
+     Coming back from Stripe.
+
+     Stripe sends the buyer to /shop/?paid=<session id>. The session id is
+     not a secret and not a password: the Worker asks Stripe whether that
+     session was actually paid before it hands over a single byte. So a
+     guessed or edited id gets a 402 rather than a recipe.
+     ------------------------------------------------------------------ */
+  function delivered(){
+    var id = new URLSearchParams(location.search).get("paid");
+    if (!id || !CHECKOUT_URL) return;
+
+    var dl = CHECKOUT_URL.replace(/\/checkout$/, "/download") + "?session_id=" + encodeURIComponent(id);
+
+    lastFocus = document.body;
+    dbody.innerHTML =
+      '<button class="r-close" id="x" aria-label="Close">\u2715</button>' +
+      '<h2 id="dtitle">Thank you</h2>' +
+      '<p class="r-blurb">Checking that with Stripe\u2026</p>';
+    drawer.hidden = false;
+    requestAnimationFrame(function(){ drawer.classList.add("open"); scrim.classList.add("open"); });
+    document.body.style.overflow = "hidden";
+    document.getElementById("x").addEventListener("click", function(){ close(); });
+
+    fetch(dl, { headers: { "Accept": "application/json" } }).then(function(res){
+      var type = res.headers.get("Content-Type") || "";
+
+      if (type.indexOf("application/pdf") === 0){
+        /* Paid, and it is a card. Show it, and give them the file. */
+        dbody.innerHTML =
+          '<button class="r-close" id="x" aria-label="Close">\u2715</button>' +
+          '<p class="r-got">Here it is.</p>' +
+          '<p class="r-blurb">It is yours to keep. The download button saves it, and a copy is on its way to your email.</p>' +
+          '<div class="r-frame"><iframe src="' + dl + '" title="Your recipe card"></iframe></div>' +
+          '<a class="r-dl" href="' + dl + '" download>Download the card</a>' +
+          '<p class="r-note">Print it at actual size and it fits a counter.</p>';
+      } else {
+        return res.json().then(function(d){
+          if (d.shipped){
+            dbody.innerHTML =
+              '<button class="r-close" id="x" aria-label="Close">\u2715</button>' +
+              '<p class="r-got">Thank you.</p>' +
+              '<p class="r-blurb">' + d.name + ' is on its way. I pack these myself, so give me a couple of days.</p>';
+          } else {
+            dbody.innerHTML =
+              '<button class="r-close" id="x" aria-label="Close">\u2715</button>' +
+              '<p class="r-got">Something went wrong.</p>' +
+              '<p class="r-blurb">' + (d.error || "I could not confirm that payment.") +
+              ' Email me and I will sort it out, nothing is lost.</p>';
+          }
+        });
+      }
+    }).catch(function(){
+      dbody.innerHTML =
+        '<button class="r-close" id="x" aria-label="Close">\u2715</button>' +
+        '<p class="r-got">Something went wrong.</p>' +
+        '<p class="r-blurb">I could not reach the server. Email me and I will send it over.</p>';
+    }).then(function(){
+      var x = document.getElementById("x");
+      if (x) x.addEventListener("click", function(){ close(); });
+      /* Take ?paid out of the URL so a refresh does not replay this. */
+      history.replaceState({}, "", "/shop/");
+    });
+  }
+  delivered();
 
   /* Deep link: /r/<slug> is rewritten to this page, so read it on load. */
   var m = location.pathname.match(/^\/r\/([a-z0-9-]+)/);

@@ -2,12 +2,16 @@ name = "bakehouse-store"
 main = "src/index.js"
 compatibility_date = "2026-09-13"
 
-# Where the recipe PDFs live. Private bucket, no public URL.
-# The only way bytes come out is through this Worker, after Stripe
-# confirms the payment.
-[[r2_buckets]]
+# Where the recipe PDFs live. Not on the website, and with no public URL.
+# The only way bytes come out is through this Worker, after Stripe confirms
+# the payment.
+#
+# KV rather than R2: the OAuth token wrangler login grants covers workers_kv
+# but not R2, and KV needs no payment method on file. Values can be 25 MB and
+# these PDFs are about 200 KB, so the limit is not close.
+[[kv_namespaces]]
 binding = "RECIPES"
-bucket_name = "bakehouse-recipes"
+id = "b186b765d9a34a00ba571ed9f7aa8d59"
 
 # The Stripe key is NOT stored here. Set it once, from your terminal:
 #   npx wrangler secret put STRIPE_SECRET_KEY

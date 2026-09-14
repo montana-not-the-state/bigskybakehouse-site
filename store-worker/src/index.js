@@ -147,10 +147,12 @@ export default {
         return json({ shipped: true, name: item.name }, 200, origin);
       }
 
-      const obj = await env.RECIPES.get(item.file);
-      if (!obj) return json({ error: "The file is missing. Email me and I will send it." }, 500, origin);
+      /* arrayBuffer, because KV returns the value itself rather than an
+         object wrapper the way R2 does. */
+      const pdf = await env.RECIPES.get(item.file, "arrayBuffer");
+      if (!pdf) return json({ error: "The file is missing. Email me and I will send it." }, 500, origin);
 
-      return new Response(obj.body, {
+      return new Response(pdf, {
         headers: {
           "Content-Type": "application/pdf",
           "Content-Disposition": 'inline; filename="' + item.file + '"',
