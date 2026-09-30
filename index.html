@@ -64,6 +64,10 @@
       font:600 11px 'Karla',system-ui,sans-serif;letter-spacing:.18em;
       text-transform:uppercase;color:var(--accent-on-dark)}
     .group::after{content:"";flex:1;height:1px;background:rgba(245,240,230,.22)}
+    .count-strip{display:flex;align-items:center;gap:14px;margin-top:22px;padding:14px 18px;border-radius:12px;text-decoration:none;color:var(--ground);background:rgba(245,240,230,.08);border:1.5px dashed rgba(245,240,230,.35)}
+    .count-strip b{font:800 28px 'Bitter',Georgia,serif;color:var(--accent-on-dark);font-variant-numeric:tabular-nums}
+    .count-strip span{font-size:14px;line-height:1.4}
+    .count-strip:hover{background:rgba(245,240,230,.14)}
   </style>
 </head>
 <body>
@@ -77,6 +81,9 @@
   <p class="tag">Baking is my love language.</p>
   <div class="rule"></div>
   <p class="intro">Sourdough &amp; baked goods, baked weekly. Order ahead and grab your bag at <em>Station 7, Eastport, or Oscar’s</em>. Pickup day is posted with each week’s drop.</p>
+
+  <a class="count-strip" href="/loaves/"><b id="loafCount">100+</b><span>loaves sold. Help us reach 1,000, and every hundredth loaf earns a free one &rarr;</span></a>
+  <script>fetch('/loaves/count.json',{cache:'no-store'}).then(r=>r.json()).then(d=>{document.getElementById('loafCount').textContent=d.total.toLocaleString()}).catch(()=>{})</script>
 
   <nav class="links">
     <a class="btn primary" href="https://www.hotplate.com/bigskybakehouse" target="_blank" rel="noopener"><span class="n">01</span><span>Order Fresh Sourdough</span></a>
