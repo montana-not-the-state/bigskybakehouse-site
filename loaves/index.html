@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Road to 1,000 Loaves · Big Sky Bakehouse</title>
+<meta name="description" content="Help Big Sky Bakehouse bake its 1,000th loaf. Every hundredth loaf earns a free one.">
+<meta name="theme-color" content="#7E3B52">
+<meta property="og:title" content="Road to 1,000 Loaves · Big Sky Bakehouse">
+<meta property="og:description" content="Help us bake loaf 1,000. Every hundredth loaf earns a free one.">
+<link rel="icon" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,400;0,700;0,800;1,400&family=Karla:wght@400;500;700&display=swap">
+<style>
+  :root{--ground:#F5F0E6;--sky:#1B2A41;--accent:#BE6B39;--jam:#7E3B52;--accent-on-dark:#D98650;--jam-lift:#8E4560;--line:rgba(245,240,230,.28)}
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;font-family:'Karla',system-ui,sans-serif;color:var(--ground);background:var(--jam);
+       background-image:radial-gradient(120% 46% at 50% 0%,var(--jam-lift) 0%,var(--jam) 62%);
+       background-repeat:no-repeat;background-attachment:fixed;min-height:100vh}
+  .wrap{max-width:480px;margin:0 auto;padding:52px 28px 56px;display:flex;flex-direction:column}
+  .top{display:flex;align-items:center;gap:16px;text-decoration:none;color:inherit}
+  .mark{width:152px;height:116px;overflow:hidden;position:relative;flex:none}
+  .mark img{position:absolute;left:-36px;top:-36px;width:214px;height:214px}
+  .brand{font-family:'Bitter',Georgia,serif;font-weight:800;font-size:22px;line-height:1;letter-spacing:-.015em}
+  .meta{font:500 10px/1.6 'Karla',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,230,.78)}
+  h1{font-family:'Bitter',Georgia,serif;font-weight:800;font-size:clamp(40px,12vw,50px);line-height:.95;letter-spacing:-.025em;margin:26px 0 0}
+  .tag{font-family:'Bitter',Georgia,serif;font-style:italic;font-size:19px;line-height:1.35;color:var(--accent-on-dark);margin:14px 0 0;text-wrap:pretty}
+  .rule{height:1.5px;background:var(--line);margin:26px 0 22px}
+  .count{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .num{font-family:'Bitter',Georgia,serif;font-weight:800;font-size:clamp(80px,26vw,112px);line-height:.85;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+  .of{font:500 11px 'Karla',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,230,.78)}
+  .track{position:relative;height:10px;border-radius:5px;background:rgba(245,240,230,.18);margin:30px 8px 0}
+  .fill{position:absolute;inset:0 auto 0 0;border-radius:5px;background:var(--accent-on-dark);width:0;transition:width 1s ease}
+  .marks{position:relative;height:44px;margin:0 8px}
+  .m{position:absolute;top:-14px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:5px;font:500 10px ui-monospace,Menlo,monospace;color:rgba(245,240,230,.5)}
+  .dot{width:18px;height:18px;border-radius:50%;border:1.5px solid rgba(245,240,230,.45);background:var(--jam)}
+  .m.done{color:var(--accent-on-dark)} .m.done .dot{background:var(--accent-on-dark);border-color:var(--accent-on-dark)}
+  .m.next{color:var(--ground)} .m.next .dot{border:2.5px solid var(--ground)}
+  @media (max-width:430px){.m:not(.next):not(.goal) span:last-child{visibility:hidden}}
+  .next{font-family:'Bitter',Georgia,serif;font-weight:700;font-size:21px;line-height:1.3;margin:8px 0 0;text-wrap:balance}
+  .group{display:flex;align-items:center;gap:12px;margin:34px 0 12px;font:600 11px 'Karla',system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-on-dark)}
+  .group::after{content:"";flex:1;height:1px;background:rgba(245,240,230,.22)}
+  .intro{font-size:15.5px;line-height:1.6;color:rgba(245,240,230,.92);margin:0 0 10px;text-wrap:pretty}
+  .intro em{font-style:normal;color:var(--accent-on-dark)}
+  .links{display:flex;flex-direction:column;gap:10px;margin-top:22px}
+  .btn{display:flex;align-items:center;gap:14px;border-radius:12px;padding:19px 20px;font-family:'Bitter',Georgia,serif;font-weight:700;font-size:16.5px;text-decoration:none;border:1.5px solid rgba(245,240,230,.45);color:#F5F0E6;transition:background .18s ease,transform .12s ease}
+  .btn .n{font:500 10px ui-monospace,Menlo,monospace;color:var(--accent-on-dark)}
+  .btn:hover{background:rgba(245,240,230,.1)}
+  .btn.primary{background:var(--ground);color:var(--sky);border-color:var(--ground);padding:20px}
+  .btn.primary .n{color:var(--accent)} .btn.primary:hover{background:#fff}
+  .btn:focus-visible,.top:focus-visible{outline:2px solid var(--ground);outline-offset:3px}
+  .social{display:flex;gap:14px;justify-content:center;margin-top:34px}
+  .ico{width:54px;height:54px;border-radius:27px;border:1.5px solid rgba(245,240,230,.45);display:flex;align-items:center;justify-content:center;color:var(--ground)}
+  .ico:hover{background:rgba(245,240,230,.1);border-color:var(--ground)}
+  .ig{width:22px;height:22px;border:1.6px solid currentColor;border-radius:7px;position:relative;display:flex;align-items:center;justify-content:center}
+  .ig-lens{width:9px;height:9px;border:1.6px solid currentColor;border-radius:5px}
+  .ig-dot{position:absolute;top:2.5px;right:2.5px;width:2.6px;height:2.6px;border-radius:2px;background:currentColor}
+  .az{font-family:'Bitter',Georgia,serif;font-weight:800;font-size:19px;line-height:1;position:relative}
+  .az-smile{position:absolute;left:-3px;right:-7px;bottom:-7px;height:7px;border-bottom:1.6px solid currentColor;border-radius:0 0 60% 60%}
+  .small{font:500 10px/1.6 'Karla',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,230,.45);margin-top:30px;text-align:center}
+  @media (prefers-reduced-motion:reduce){.fill{transition:none}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <a class="top" href="/"><div class="mark"><img src="/logo.png" alt="Big Sky Bakehouse"></div><div><div class="brand">Big Sky<br>Bakehouse</div><div class="meta" style="margin-top:6px">Micro bakery · Annapolis, MD</div></div></a>
+
+  <h1>Road to<br>1,000 loaves</h1>
+  <p class="tag">Every loaf you buy moves us closer.</p>
+  <div class="rule"></div>
+
+  <div class="count"><span class="num" id="total">&nbsp;</span><span class="of">loaves baked for you<br>since March 2026</span></div>
+  <div class="track" role="progressbar" aria-label="Loaves sold toward 1,000" aria-valuemin="0" aria-valuemax="1000" id="track"><div class="fill" id="fill"></div></div>
+  <div class="marks" id="marks"></div>
+  <p class="next" id="next"></p>
+
+  <p class="group">The deal</p>
+  <p class="intro">Whoever buys loaf <em>200, 300, 400</em> and every hundred after that gets a code for a <em>free loaf</em> on their next order.</p>
+  <p class="intro">At 1,000 we are throwing a party, and the 1,000th bag gets stamped and framed.</p>
+
+  <nav class="links">
+    <a class="btn primary" href="https://www.hotplate.com/bigskybakehouse" target="_blank" rel="noopener"><span class="n">01</span><span>Order a Loaf</span></a>
+    <a class="btn" href="https://www.hotplate.com/bigskybakehouse?sms_reminder=true" target="_blank" rel="noopener"><span class="n">02</span><span>Never Miss a Pre-Order</span></a>
+    <a class="btn" href="https://www.hotplate.com/bigskybakehouse?gift=true" target="_blank" rel="noopener"><span class="n">03</span><span>Buy a Gift Card</span></a>
+    <p class="group" style="margin:16px 0 2px">Or bake it yourself</p>
+    <a class="btn" href="/shop/"><span class="n">04</span><span>Get My Recipe Cards</span></a>
+    <a class="btn" href="/shelf/"><span class="n">05</span><span>The Tools I Use</span></a>
+  </nav>
+  <div class="social">
+    <a class="ico" href="https://www.instagram.com/bigskybakehouse/" target="_blank" rel="noopener" aria-label="Instagram"><span class="ig"><span class="ig-lens"></span><span class="ig-dot"></span></span></a>
+    <a class="ico" href="/shelf/" aria-label="Shop my Amazon favorites"><span class="az">a<span class="az-smile"></span></span></a>
+  </div>
+
+  <p class="small" id="updated">&nbsp;</p>
+</main>
+<script>
+fetch('count.json',{cache:'no-store'}).then(r=>r.json()).then(d=>{
+  const t=d.total,g=1000,next=Math.min(g,(Math.floor(t/100)+1)*100);
+  document.getElementById('total').textContent=t.toLocaleString();
+  document.getElementById('fill').style.width=Math.min(100,t/g*100)+'%';
+  document.getElementById('track').setAttribute('aria-valuenow',t);
+  document.getElementById('next').textContent=t>=g?'We made it to 1,000. Thank you!':(next-t)+' loaves until loaf '+next+'. Will it be yours?';
+  const m=document.getElementById('marks');
+  for(let v=100;v<=g;v+=100){const e=document.createElement('div');e.className='m'+(t>=v?' done':'')+(v===next&&t<g?' next':'')+(v===g?' goal':'');e.style.left=(v/g*100)+'%';e.innerHTML='<span class="dot"></span><span>'+v+'</span>';m.appendChild(e);}
+  const u=new Date(d.updated+'T12:00:00');
+  document.getElementById('updated').textContent='Updated after each bake day · '+u.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+}).catch(()=>{document.getElementById('next').textContent='The count is taking a break. Check back soon.';});
+</script>
+</body>
+</html>
