@@ -42,6 +42,15 @@ const CATALOG = {
 
 const SITE = "https://bigskybakehouse.com";
 
+/* Airtable. Ids rather than names, because a rename in the UI would silently
+   break name-based references and this code runs unattended. */
+const AT = {
+  base:      "app1imrKz4YPnv38p",
+  products:  "tbllIUKsQwUckRqpE",
+  orders:    "tblMsQBgKvqP6RPIA",
+  clients:   "tblICPgb3GoBdsLw5",
+};
+
 function cors(origin) {
   const ok = ALLOWED_ORIGINS.includes(origin);
   return {
@@ -119,7 +128,15 @@ export default {
         params["phone_number_collection[enabled]"] = "true";
       }
 
-      const session = await stripe(env, "checkout/sessions", "POST", params);
+      /* Stripe's own message comes back as readable JSON. Without this the
+         Worker throws and Cloudflare shows a bare "error code: 1101", which
+         says nothing about what Stripe actually objected to. */
+      let session;
+      try {
+        session = await stripe(env, "checkout/sessions", "POST", params);
+      } catch (e) {
+        return json({ error: "Stripe: " + String(e && e.message || e) }, 502, origin);
+      }
       return json({ url: session.url }, 200, origin);
     }
 
@@ -162,6 +179,131 @@ export default {
       });
     }
 
+    /* ---------------- POST /webhook ----------------
+       Stripe calls this when a payment clears. It is the only thing that
+       writes to Airtable, so a sale that Stripe did not confirm can never
+       create a row. */
+    if (url.pathname === "/webhook" && request.method === "POST") {
+      const raw = await request.text();
+      const sig = request.headers.get("stripe-signature") || "";
+
+      /* Verify it really came from Stripe. Without this, anyone who finds
+         this URL can post fake orders into her base. */
+      if (!env.STRIPE_WEBHOOK_SECRET) return json({ error: "No webhook secret set" }, 503, origin);
+      const ok = await verifyStripe(raw, sig, env.STRIPE_WEBHOOK_SECRET);
+      if (!ok) return json({ error: "Bad signature" }, 400, origin);
+
+      const event = JSON.parse(raw);
+      if (event.type !== "checkout.session.completed") {
+        return json({ ignored: event.type }, 200, origin);
+      }
+
+      try {
+        await recordOrder(env, event.data.object);
+      } catch (e) {
+        /* A 500 makes Stripe retry for up to 72 hours, which is what we want:
+           a transient Airtable failure should not lose the order. */
+        return json({ error: String(e && e.message || e) }, 500, origin);
+      }
+      return json({ ok: true }, 200, origin);
+    }
+
     return json({ error: "Not found" }, 404, origin);
   },
 };
+
+/* ------------------------------------------------------------------
+   Stripe webhook signature, done with WebCrypto because Workers has no
+   Node crypto. Stripe signs "<timestamp>.<raw body>" with HMAC SHA-256.
+------------------------------------------------------------------ */
+async function verifyStripe(raw, header, secret) {
+  const parts = {};
+  header.split(",").forEach(function (p) {
+    const i = p.indexOf("=");
+    if (i > 0) parts[p.slice(0, i).trim()] = p.slice(i + 1).trim();
+  });
+  if (!parts.t || !parts.v1) return false;
+
+  /* Reject anything older than five minutes, so a captured request cannot
+     be replayed later. */
+  if (Math.abs(Date.now() / 1000 - Number(parts.t)) > 300) return false;
+
+  const key = await crypto.subtle.importKey(
+    "raw", new TextEncoder().encode(secret),
+    { name: "HMAC", hash: "SHA-256" }, false, ["sign"]
+  );
+  const mac = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(parts.t + "." + raw));
+  const hex = [...new Uint8Array(mac)].map(function (b) { return b.toString(16).padStart(2, "0"); }).join("");
+
+  /* Constant-time compare, so a wrong signature does not leak how wrong. */
+  if (hex.length !== parts.v1.length) return false;
+  let diff = 0;
+  for (let i = 0; i < hex.length; i++) diff |= hex.charCodeAt(i) ^ parts.v1.charCodeAt(i);
+  return diff === 0;
+}
+
+async function at(env, path, method, body) {
+  const res = await fetch("https://api.airtable.com/v0/" + path, {
+    method: method || "GET",
+    headers: {
+      Authorization: "Bearer " + env.AIRTABLE_PAT,
+      "Content-Type": "application/json",
+    },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error("Airtable: " + JSON.stringify(data.error || data));
+  return data;
+}
+
+/* Clients is the address book and stays canonical, so an order links to an
+   existing person rather than making a second row for the same email. */
+async function findOrCreateClient(env, email, name) {
+  if (!email) return null;
+  const q = encodeURIComponent('LOWER({Email}) = "' + email.toLowerCase().replace(/"/g, '') + '"');
+  const found = await at(env, AT.base + "/" + AT.clients + "?maxRecords=1&filterByFormula=" + q);
+  if (found.records && found.records.length) return found.records[0].id;
+
+  const made = await at(env, AT.base + "/" + AT.clients, "POST", {
+    records: [{ fields: { Name: name || email, Email: email, Notes: "Added automatically from a shop order." } }],
+  });
+  return made.records[0].id;
+}
+
+async function recordOrder(env, session) {
+  const slug = session.metadata && session.metadata.slug;
+  const item = CATALOG[slug];
+
+  /* Look the product up by slug. If it is missing the order is still written,
+     just unlinked, because losing a sale is worse than an incomplete row. */
+  let productId = null;
+  if (slug) {
+    const q = encodeURIComponent('{Slug} = "' + slug.replace(/"/g, '') + '"');
+    const hit = await at(env, AT.base + "/" + AT.products + "?maxRecords=1&filterByFormula=" + q);
+    if (hit.records && hit.records.length) productId = hit.records[0].id;
+  }
+
+  const d = session.customer_details || {};
+  const ship = session.shipping_details || {};
+  const a = (ship.address || d.address || {});
+  const lines = [a.line1, a.line2, [a.city, a.state, a.postal_code].filter(Boolean).join(" "), a.country]
+    .filter(Boolean).join("\n");
+
+  const clientId = await findOrCreateClient(env, d.email, ship.name || d.name);
+
+  const fields = {
+    "Order ID": session.id,
+    Date: new Date((session.created || Date.now() / 1000) * 1000).toISOString(),
+    Amount: (session.amount_total || 0) / 100,
+    Email: d.email || "",
+  };
+  if (productId) fields.Product = [productId];
+  if (clientId) fields.Client = [clientId];
+  if (item && item.ship) {
+    fields["Ship Name"] = ship.name || d.name || "";
+    fields["Ship Address"] = lines;
+  }
+  if (!productId) fields.Notes = "No product matched slug " + (slug || "(none)") + ". Check the Slug field.";
+
+  await at(env, AT.base + "/" + AT.orders, "POST", { records: [{ fields: fields }] });
+}
