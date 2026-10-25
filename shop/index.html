@@ -471,6 +471,13 @@ footer a:hover,footer a:focus-visible{border-bottom-color:var(--accent);}
 .r-buy[disabled]{background:var(--stone);cursor:not-allowed;opacity:.8}
 .r-field{width:100%;margin-top:.7rem;padding:.85rem .9rem;border:1px solid var(--card-border);
   border-radius:10px;background:var(--card-bg);color:var(--text);font:inherit}
+/* A select inherits almost nothing from the input rule on its own, so the
+   arrow and the box have to be drawn here to match the rest of the drawer. */
+select.r-field{appearance:none;cursor:pointer;padding-right:2.4rem;
+  background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),
+                   linear-gradient(135deg,var(--muted) 50%,transparent 50%);
+  background-position:calc(100% - 1.15rem) 55%,calc(100% - .8rem) 55%;
+  background-size:6px 6px,6px 6px;background-repeat:no-repeat}
 .r-note{margin-top:.8rem;font-size:var(--step--1);color:var(--muted);line-height:1.5}
 .r-warn{margin-top:.9rem;padding:.8rem .9rem;border-radius:10px;font-size:var(--step--1);
   line-height:1.5;background:color-mix(in srgb, var(--crust) 12%, transparent);
@@ -550,6 +557,12 @@ main{padding-block:2.75rem 3rem}
   var CHECKOUT_URL = "https://bakehouse-store.montanacp.workers.dev/checkout";
   var SHOW_UNREADY = true;
 
+  /* These mirror the Worker and exist only to show the right number before
+     checkout opens. The Worker decides what is actually charged, so a hand
+     edit here changes the label and not the bill. Change both together. */
+  var SHIP_FLAT = 8;
+  var FREE_SHIP_OVER = 35;
+
   /* Recipes. `ready:false` means the card itself is not finished yet.
      `slug` is permanent once posted anywhere. Changing it breaks every
      link already out in the world, so treat it as write-once. */
@@ -591,10 +604,10 @@ main{padding-block:2.75rem 3rem}
       preview:"",
       long:"Kenzo is the starter everything here is baked with. Dried, he keeps for years and travels in a envelope. Add water and flour and he wakes up over about a week. The videos are the part that matters: day three is when nothing has happened and everyone decides they have killed it, so I filmed my own jar every day to show you that flat and boring is exactly right." },
 
-    { slug:"pancake-mix", section:"kitchen", name:"Sourdough Pancake Mix", price:0, ready:false, physical:true,
-      blurb:"Coming soon. Weekend pancakes without thinking about it the night before.",
+    { slug:"hot-cakes", section:"kitchen", name:"Hot Cakes", price:13, ready:false, physical:true,
+      blurb:"Sourdough pancake mix with real dried starter in the bag. No feeding, no planning the night before.",
       preview:"",
-      long:"Not made yet. It is on the list." }
+      long:"Kenzo, dried and ground to a powder fine enough to hydrate in five minutes, mixed with flour, raw sugar, baking powder and sea salt. At home you add milk, an egg, melted butter and a splash of vanilla, stir, and let it rest five minutes while the pan comes up. One 9.6 oz bag makes 10 to 12 pancakes and keeps in the pantry, which makes it the first thing here without a deadline." }
   ];
 
   var gridCards = document.getElementById("grid-cards");
@@ -638,7 +651,10 @@ main{padding-block:2.75rem 3rem}
   function open(r, replace){
     lastFocus = document.activeElement;
     var buy;
-    if (!r.ready){
+    if (!r.ready && r.physical){
+      buy = '<div class="r-warn"><b>Not quite ready.</b> This one is coming. ' +
+            'Follow along on Instagram and I will say the moment it is in stock.</div>';
+    } else if (!r.ready){
       buy = '<div class="r-warn"><b>This card is not finished yet.</b> It is on the list. ' +
             'The free loaf below is a good place to start in the meantime.</div>';
     } else if (r.price === 0){
@@ -650,6 +666,18 @@ main{padding-block:2.75rem 3rem}
       buy = '<button class="r-buy" disabled>Buy · ' + money(r.price) + '</button>' +
             '<div class="r-warn"><b>Payments are not connected yet.</b> ' +
             'The button turns on once the Stripe key is set in Cloudflare.</div>';
+    } else if (r.physical){
+      /* Quantity sits here rather than on the Stripe page, because shipping
+         goes free at $50 and that has to be worked out before checkout opens. */
+      var opts = "";
+      for (var q = 1; q <= 6; q++){
+        opts += '<option value="' + q + '">' + q + (q === 1 ? " bag" : " bags") +
+                ' · $' + (r.price * q) + '</option>';
+      }
+      buy = '<label class="r-note" for="qty">How many?</label>' +
+            '<select class="r-field" id="qty">' + opts + '</select>' +
+            '<button class="r-buy" data-act="buy">Buy · $' + r.price + '</button>' +
+            '<p class="r-note" id="shipnote"></p>';
     } else {
       buy = '<button class="r-buy" data-act="buy">Buy · ' + money(r.price) + '</button>' +
             '<p class="r-note">Card opens on screen the moment you pay, and lands in your email too.</p>';
@@ -676,6 +704,30 @@ main{padding-block:2.75rem 3rem}
     document.getElementById("x").addEventListener("click", close);
     var act = dbody.querySelector("[data-act]");
     if (act) act.addEventListener("click", function(){ go(r, act.dataset.act); });
+
+    var qsel = document.getElementById("qty");
+    if (qsel){
+      var sync = function(){
+        var n = parseInt(qsel.value, 10) || 1;
+        var sub = r.price * n;
+        var free = sub >= FREE_SHIP_OVER;
+        act.textContent = "Buy · $" + (free ? sub : sub + SHIP_FLAT);
+        var note;
+        if (free){
+          note = "Shipping is free on this one. Arrives in 3 to 7 days.";
+        } else if (sub + r.price >= FREE_SHIP_OVER){
+          /* Said only when it is one bag away, where it is useful rather
+             than a sales line attached to every quantity. */
+          note = "Add one more bag and shipping is free. Arrives in 3 to 7 days.";
+        } else {
+          note = "Plus $" + SHIP_FLAT + " shipping, free over $" + FREE_SHIP_OVER +
+                 ". Arrives in 3 to 7 days.";
+        }
+        document.getElementById("shipnote").textContent = note;
+      };
+      qsel.addEventListener("change", sync);
+      sync();
+    }
     document.getElementById("x").focus();
 
     var url = "/r/" + r.slug;
@@ -705,7 +757,10 @@ main{padding-block:2.75rem 3rem}
     fetch(CHECKOUT_URL, {
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({ slug: r.slug })
+      body: JSON.stringify({
+        slug: r.slug,
+        qty: (document.getElementById("qty") || {}).value || 1
+      })
     }).then(function(res){ return res.json(); })
       .then(function(d){ if (d.url) location.href = d.url; });
   }

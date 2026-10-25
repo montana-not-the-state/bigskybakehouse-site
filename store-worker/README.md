@@ -107,3 +107,51 @@ the PDF appears, then swap in the `sk_live_` key and deploy again.
 
 Edit `cents` in `CATALOG`, then `npx wrangler deploy`. Nothing on the website
 needs to change, because the website never knew the price.
+
+---
+
+## Order notifications
+
+Three parts, and all three have to be on or an order lands nowhere.
+
+1. **`POST /webhook`** in this Worker. Stripe calls it when a payment clears,
+   and it writes a row to **Store Orders** in the bakehouse base. It is the
+   only thing that writes, so a sale Stripe did not confirm can never create
+   a row.
+2. **An Airtable automation**, "Store order to pack and ship", which emails
+   montanacp@gmail.com whenever a row appears with a shipping address on it.
+   Recipe sales have no address, so they do not trigger it.
+3. **Stripe's own receipt** to the customer, switched on in the Stripe
+   dashboard under Settings, then Customer emails.
+
+### Switching the webhook on
+
+Two secrets this Worker does not have yet.
+
+```
+cd "/Users/mfrazier/Cowork OS/Big-Sky/Bakehouse/bakehouse-site/store-worker"
+```
+
+The Airtable token, so the Worker can write the order row:
+
+```
+npx wrangler secret put AIRTABLE_PAT
+```
+
+Then register the endpoint in Stripe: **dashboard.stripe.com**, *Developers*,
+*Webhooks*, *Add endpoint*. The URL is
+`https://bakehouse-store.montanacp.workers.dev/webhook` and the one event to
+select is `checkout.session.completed`. Stripe then shows a signing secret
+starting `whsec_`. Paste it into:
+
+```
+npx wrangler secret put STRIPE_WEBHOOK_SECRET
+```
+
+```
+npx wrangler deploy
+```
+
+Until both secrets exist the Worker answers the webhook with a 503, Stripe
+keeps retrying for 72 hours, and no order is lost in the meantime. Once they
+are set, the retries land.

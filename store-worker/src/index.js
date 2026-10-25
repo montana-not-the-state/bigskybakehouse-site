@@ -37,8 +37,26 @@ const CATALOG = {
   /* Physical goods. `ship: true` is the whole difference: Stripe has to ask
      for an address, and there is no file to hand back afterwards. */
   "kenzo-starter-kit": { name: "A Piece of Kenzo, dried starter",    cents: 1500, ship: true },
-  "pancake-mix":       { name: "Sourdough Pancake Mix",              cents: 0,    ship: true },
+  "hot-cakes":         { name: "Hot Cakes, sourdough pancake mix",   cents: 1300, ship: true },
+  /* Kept so any link already posted with the old slug still resolves. */
+  "pancake-mix":       { name: "Hot Cakes, sourdough pancake mix",   cents: 1300, ship: true },
 };
+
+/* ------------------------------------------------------------------
+   SHIPPING.
+
+   One flat rate, free over a threshold. A flat rate is a deliberate
+   choice over live carrier rates: it needs no package dimensions, no
+   rate API, and nothing at checkout can surprise anyone. The far zones
+   cost more than this and the near ones cost less, which evens out.
+
+   The threshold is the part that earns its keep. Three bags ship in
+   nearly the same box as one, so sending shipping to zero at $35 costs
+   little, and three bags clears it while two do not and moves the average order a long way.
+------------------------------------------------------------------ */
+const SHIP_FLAT_CENTS = 800;
+const FREE_SHIP_OVER_CENTS = 3500;
+const MAX_QTY = 12;
 
 const SITE = "https://bigskybakehouse.com";
 
@@ -46,9 +64,9 @@ const SITE = "https://bigskybakehouse.com";
    break name-based references and this code runs unattended. */
 const AT = {
   base:      "app1imrKz4YPnv38p",
-  products:  "tbllIUKsQwUckRqpE",
-  orders:    "tblMsQBgKvqP6RPIA",
-  clients:   "tblICPgb3GoBdsLw5",
+  products:  "tbllIUKsQwUckRqpE",   // Menu Items
+  orders:    "tblMsQBgKvqP6RPIA",   // Store Orders
+  clients:   "tblICPgb3GoBdsLw5",   // Clients
 };
 
 function cors(origin) {
@@ -98,11 +116,17 @@ export default {
 
     /* ---------------- POST /checkout ---------------- */
     if (url.pathname === "/checkout" && request.method === "POST") {
-      let slug;
-      try { ({ slug } = await request.json()); } catch { return json({ error: "Bad request" }, 400, origin); }
+      let slug, qty;
+      try { ({ slug, qty } = await request.json()); } catch { return json({ error: "Bad request" }, 400, origin); }
 
       const item = CATALOG[slug];
       if (!item) return json({ error: "No such recipe" }, 404, origin);
+
+      /* The browser picks how many, never how much. A hand-edited qty can
+         only ever raise the total, and the clamp stops a 9999 that would
+         take an order she cannot fill. */
+      qty = Math.min(MAX_QTY, Math.max(1, parseInt(qty, 10) || 1));
+      if (!item.ship) qty = 1;
 
       /* A free recipe never touches Stripe. Stripe will not process a
          zero charge, and there is nothing to verify afterwards. */
@@ -113,8 +137,9 @@ export default {
         "line_items[0][price_data][currency]": "usd",
         "line_items[0][price_data][unit_amount]": String(item.cents),
         "line_items[0][price_data][product_data][name]": item.name,
-        "line_items[0][quantity]": "1",
+        "line_items[0][quantity]": String(qty),
         "metadata[slug]": slug,
+        "metadata[qty]": String(qty),
         success_url: SITE + "/shop/?paid={CHECKOUT_SESSION_ID}",
         cancel_url: SITE + "/r/" + slug,
       };
@@ -126,6 +151,19 @@ export default {
       if (item.ship) {
         params["shipping_address_collection[allowed_countries][0]"] = "US";
         params["phone_number_collection[enabled]"] = "true";
+
+        /* Worked out here rather than shown as an option, so the customer
+           sees one settled number instead of a choice they have to make. */
+        const shipCents = item.cents * qty >= FREE_SHIP_OVER_CENTS ? 0 : SHIP_FLAT_CENTS;
+        const S = "shipping_options[0][shipping_rate_data]";
+        params[S + "[type]"] = "fixed_amount";
+        params[S + "[fixed_amount][amount]"] = String(shipCents);
+        params[S + "[fixed_amount][currency]"] = "usd";
+        params[S + "[display_name]"] = shipCents === 0 ? "Free shipping" : "Shipping";
+        params[S + "[delivery_estimate][minimum][unit]"] = "business_day";
+        params[S + "[delivery_estimate][minimum][value]"] = "3";
+        params[S + "[delivery_estimate][maximum][unit]"] = "business_day";
+        params[S + "[delivery_estimate][maximum][value]"] = "7";
       }
 
       /* Stripe's own message comes back as readable JSON. Without this the
@@ -297,13 +335,24 @@ async function recordOrder(env, session) {
     Amount: (session.amount_total || 0) / 100,
     Email: d.email || "",
   };
-  if (productId) fields.Product = [productId];
+  if (productId) fields["Items Sold"] = [productId];
   if (clientId) fields.Client = [clientId];
   if (item && item.ship) {
     fields["Ship Name"] = ship.name || d.name || "";
     fields["Ship Address"] = lines;
   }
-  if (!productId) fields.Notes = "No product matched slug " + (slug || "(none)") + ". Check the Slug field.";
+  /* Written into the existing Notes field rather than new columns, because
+     a quantity and a shipping figure are worth having on the row and a
+     schema change is not mine to make. */
+  const notes = [];
+  const qty = Number(session.metadata && session.metadata.qty) || 1;
+  if (qty > 1) notes.push(qty + " bags");
+  if (item && item.ship) {
+    const shipping = (session.total_details && session.total_details.amount_shipping) || 0;
+    notes.push(shipping === 0 ? "Free shipping" : "Shipping $" + (shipping / 100).toFixed(2));
+  }
+  if (!productId) notes.push("No product matched slug " + (slug || "(none)") + ". Check the Slug field.");
+  if (notes.length) fields.Notes = notes.join(". ") + ".";
 
   await at(env, AT.base + "/" + AT.orders, "POST", { records: [{ fields: fields }] });
 }
